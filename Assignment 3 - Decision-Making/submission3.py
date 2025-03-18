@@ -1,34 +1,3 @@
-"""
-HW2.3. Practice - Assignment 3 - Decision-Making
-
-Write an algorithm for the decision-making of an agent. The algorithm should determine which behavior the agent should execute to achieve its goal, by avoiding norm violations and by personalizing its decision-making to the preferences of its user.
-
-Please, refer to the Project description on Blackboard for all the details and instructions of the assignment.
-
-The setup code gives the following variables:
-
-Name	Type	Description
-json_tree	json object	The goal tree
-norm	dict	The norm
-goal	list	The goal of the agent: a set of beliefs (strings) of the agent that must be true at the end of the execution of the trace.
-beliefs	list	A set of strings representing the initial beliefs of the agents.
-preferences	list	A pair describing the preference of the end-user.
-Your code snippet should define the following variables:
-
-Name	Type	Description
-output	list	A list of strings representing the execution trace chosen by the agent. The strings in the list are the names of the nodes in the execution trace.
-Instructions:
-A file coffee.json is provided as input for the exercise and pre-loaded for you in the variable json_tree.
-For this variant of the exercise, the variables have the following values:
-
-Variable	Value
-norm	{'type': 'P', 'actions': ['payShop']}
-goal	['haveCoffee']
-beliefs	['haveMoney']
-preferences	[['quality', 'price', 'time'], [2, 0, 1]]
-After saving and grading this variant, press the New Variant button to try a different variant.
-"""
-
 # Import necessary packages
 from anytree import Node, RenderTree, AnyNode
 from anytree.importer import DictImporter
@@ -39,7 +8,7 @@ import json
 import os
 import numpy as np
 
-print_mode = True
+print_mode = False
 
 def find_starting_node(root, starting_node_name):
     """
@@ -252,19 +221,4 @@ def main(json_tree, norm, goal, beliefs, preferences, output_dir=""):
     
     return output
 
-# output =  main(json_tree, norm, goal, beliefs, preferences)
-
-if __name__ == "__main__":
-    norm = {'type': 'P', 'actions': ['payShop']}
-    goal = ['haveCoffee']
-    beliefs = ['haveMoney']
-    preferences = [['quality', 'price', 'time'], [2, 0, 1]]
-
-    current_dir = os.path.dirname(__file__)
-    # Read the JSON file into a dictionary
-    with open(f'{current_dir}/coffee.json', 'r') as file:
-        json_tree = json.load(file)
-    main(json_tree, norm, goal, beliefs, preferences, output_dir=current_dir)
-
-    if print_mode:
-        print("Exercise 3 is done running!")
+output =  main(json_tree, norm, goal, beliefs, preferences)

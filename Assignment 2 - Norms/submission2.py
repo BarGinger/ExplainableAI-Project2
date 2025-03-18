@@ -67,23 +67,26 @@ def build_tree(json_node, parent=None):
 def annotate_tree(node, norm):
     """
     Annotates the tree by marking nodes that violate the given norm.
+
+    Parameters:
+    node (Node): The current node in the tree
+    norm (dict): The norm
+
     - If the norm is of type 'P' (prohibited), a node violates it if its name is in norm['actions'].
     - If the norm is of type 'O' (obligatory), a node violates it if it is an action but not in norm['actions'].
     """
-    # Recursive function to run on the whole tree.
     for child in node.children:
         annotate_tree(child, norm)
 
-    # Based on norm gives P or O.
-    if norm['type'] == 'P':
-        node.violation = node.name in norm['actions']
-    elif norm['type'] == 'O':
-        node.violation = node.name not in norm['actions'] and node.type == 'ACT'
+    if 'type' in norm:
+        if norm['type'] == 'P':
+            node.violation = node.name in norm['actions']
+        elif norm['type'] == 'O':
+            node.violation = node.name not in norm['actions'] and node.type == 'ACT'
 
-    # Parent check - Checks if child node has violated the norms.
-    if node.type == 'OR':
+    if hasattr(node, 'type') and node.type == 'OR':
         node.violation = all(child.violation for child in node.children)
-    elif node.type in ['SEQ', 'AND']:
+    elif hasattr(node, 'type') and node.type in ['SEQ', 'AND']:
         node.violation = any(child.violation for child in node.children)
 
 def export_tree_to_png(root, output_file):
