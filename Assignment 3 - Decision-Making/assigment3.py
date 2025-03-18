@@ -43,7 +43,7 @@ import json
 import os
 import numpy as np
 
-print_mode = False
+print_mode = True
 
 def find_starting_node(root, starting_node_name):
     """
