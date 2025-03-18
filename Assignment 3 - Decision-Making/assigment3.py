@@ -64,27 +64,46 @@ def find_starting_node(root, starting_node_name):
 
     return node
 
-def generate_traces(node):
-    """Recursively generates all possible traces from the given node."""
+def generate_traces(node, calc_cost=False):
+    """Recursively generates all possible traces from the given node.
+    Parameters:
+    node (Node): The current node in the tree
+    calc_cost (bool): Whether to calculate the cost of each trace
+    Returns:
+    list: A list of all possible traces from the given node
+    list: A list of the cost of each trace
+    """
     if not hasattr(node, 'children') or not node.children:
-        return [[node.name]]  # Leaf node (ACT), end of a trace
+        if calc_cost:
+            return [[node.name]], [node.costs]  # Leaf node (ACT), end of a trace
+        else:
+            return [[node.name]], []  # Leaf node (ACT), end of a trace
     
     traces = []
+    costs = []
     
     if node.type == "OR":
         # OR node: Select one child at a time
         for child in node.children:
-            child_traces = generate_traces(child)
+            child_traces, child_cost = generate_traces(child, calc_cost)
             for trace in child_traces:
                 traces.append([node.name] + trace)
+            if calc_cost:
+                for cost in child_cost:
+                    if cost is not None:
+                        costs.append(node.costs + cost)
     
     elif node.type == "SEQ" or node.type == "AND":
         # SEQ/AND node: Concatenate traces of all children in order
-        child_traces = [generate_traces(child) for child in node.children]
+        child_traces = [generate_traces(child, calc_cost) for child in node.children]
         for combination in product(*child_traces):
             traces.append([node.name] + [step for trace in combination for step in trace])
+        
+        if calc_cost:
+            for combination in product(*[generate_traces(child, calc_cost) for child in node.children]):
+                costs.append(node.costs + sum([cost for _, cost in combination]))
     
-    return traces
+    return traces, costs
 
 
 def build_tree(json_node, parent=None):
@@ -144,13 +163,14 @@ def main(json_tree, norm, goal, beliefs, preferences, output_dir=""):
     root = build_tree(json_tree)
     annotate_tree(root, norm)
 
-    traces = generate_traces(root)
+    # Generting all possible traces of given tree
+    traces, costs = generate_traces(root, calc_cost=True)
     if print_mode:
         print(f"Generated {len(traces)} traces:")
         for trace in traces:
             print(trace)
 
-    # remove_violate_parents(root)
+    # Remove_violate_parents(root)
     output = RenderTree(root)
     if print_mode:
         print(output)
