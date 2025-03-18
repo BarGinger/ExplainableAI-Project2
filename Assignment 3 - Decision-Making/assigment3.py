@@ -41,6 +41,7 @@ from anytree import RenderTree, AnyNode
 from anytree.importer import DictImporter
 import json
 import os
+import numpy as np
 
 print_mode = False
 
@@ -90,19 +91,24 @@ def generate_traces(node, calc_cost=False):
                 traces.append([node.name] + trace)
             if calc_cost:
                 for cost in child_cost:
-                    if hasattr(cost, 'costs'):
-                        costs.append(cost.costs + cost)
+                    costs.append(cost)
     
     elif node.type == "SEQ" or node.type == "AND":
         # SEQ/AND node: Concatenate traces of all children in order
-        child_traces = [generate_traces(child, calc_cost) for child in node.children]
+        child_traces = []
+        child_costs = []
+        for child in node.children:
+            child_traces_i, child_costs_i = generate_traces(child, calc_cost)
+            child_traces.append(child_traces_i)
+            child_costs.append(child_costs_i)
+        
         for combination in product(*child_traces):
             traces.append([node.name] + [step for trace in combination for step in trace])
         
         if calc_cost:
-            for combination in product(*[generate_traces(child, calc_cost) for child in node.children]):
-                costs.append(node.costs + sum([cost for _, cost in combination]))
-    
+            for combination in product(*child_costs):
+                costs.append(np.sum([cost for cost in combination]))
+
     return traces, costs
 
 
@@ -165,6 +171,8 @@ def main(json_tree, norm, goal, beliefs, preferences, output_dir=""):
 
     # Generting all possible traces of given tree
     traces, costs = generate_traces(root, calc_cost=True)
+
+    print("costs: ", costs)
     if print_mode:
         print(f"Generated {len(traces)} traces:")
         for trace in traces:
