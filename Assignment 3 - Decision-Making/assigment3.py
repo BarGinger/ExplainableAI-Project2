@@ -183,12 +183,29 @@ def main(json_tree, norm, goal, beliefs, preferences, output_dir=""):
             print(trace)
 
     # Filter traces that violate norms.
+    # Filter traces that violate norms and keep their respective costs
     valid_traces = []
     valid_costs = []
     for trace, cost in zip(traces, costs):
-        if not any(node.violation for node in trace):
-            valid_traces.append(trace)
-            valid_costs.append(cost)
+        valid = True
+        has_all_goals = [False for goal_belief in goal]
+        for node_name in trace:
+            node = find(root, lambda node: node.name == node_name)
+            if node and node.violation:
+                valid = False
+                print(f"Trace violates norm: {trace}")
+                break   
+
+            for goal_belief in goal:
+                if hasattr(node, 'post') and goal_belief not in node.post:
+                    valid = False
+                    print(f"Trace does not achieve goal: {trace}")
+                    break     
+        if valid:
+            
+            if valid:
+                valid_traces.append(trace)
+                valid_costs.append(cost)
 
     # Remove_violate_parents(root)
     output = RenderTree(root)
