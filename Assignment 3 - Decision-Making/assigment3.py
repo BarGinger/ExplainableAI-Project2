@@ -90,8 +90,8 @@ def generate_traces(node, calc_cost=False):
                 traces.append([node.name] + trace)
             if calc_cost:
                 for cost in child_cost:
-                    if cost is not None:
-                        costs.append(node.costs + cost)
+                    if hasattr(cost, 'costs'):
+                        costs.append(cost.costs + cost)
     
     elif node.type == "SEQ" or node.type == "AND":
         # SEQ/AND node: Concatenate traces of all children in order
