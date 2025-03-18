@@ -74,7 +74,7 @@ def generate_traces(node, calc_cost=False):
     list: A list of all possible traces from the given node
     list: A list of the cost of each trace
     """
-    if not hasattr(node, 'children') or not node.children:
+    if not hasattr(node, 'children') or not node.children: # and hasattr(node, 'violation') and node.violation is False:
         if calc_cost:
             return [[node.name]], [node.costs]  # Leaf node (ACT), end of a trace
         else:
@@ -98,10 +98,11 @@ def generate_traces(node, calc_cost=False):
         child_traces = []
         child_costs = []
         for child in node.children:
+            # if hasattr(child, 'violation') and child.violation is False:
             child_traces_i, child_costs_i = generate_traces(child, calc_cost)
             child_traces.append(child_traces_i)
             child_costs.append(child_costs_i)
-        
+    
         for combination in product(*child_traces):
             traces.append([node.name] + [step for trace in combination for step in trace])
         
@@ -166,17 +167,28 @@ def main(json_tree, norm, goal, beliefs, preferences, output_dir=""):
     output (anytree.render.RenderTree): The annotated tree, rendered using the function RenderTree of anytree.
     """
 
+    # Build the tree from the JSON object
     root = build_tree(json_tree)
+
+    # Annotate the tree based on the given norm
     annotate_tree(root, norm)
 
-    # Generting all possible traces of given tree
+    # Generting all possible traces of given tree, and calculating the cost of each trace
     traces, costs = generate_traces(root, calc_cost=True)
 
-    print("costs: ", costs)
     if print_mode:
+        print("costs: ", costs)
         print(f"Generated {len(traces)} traces:")
         for trace in traces:
             print(trace)
+
+    # Filter traces that violate norms.
+    valid_traces = []
+    valid_costs = []
+    for trace, cost in zip(traces, costs):
+        if not any(node.violation for node in trace):
+            valid_traces.append(trace)
+            valid_costs.append(cost)
 
     # Remove_violate_parents(root)
     output = RenderTree(root)
