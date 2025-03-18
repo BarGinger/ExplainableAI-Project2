@@ -186,15 +186,24 @@ def main(json_tree, norm, goal, beliefs, preferences, output_dir=""):
     # Filter traces that violate norms and keep their respective costs
     valid_traces = []
     valid_costs = []
+    
     for trace, cost in zip(traces, costs):
         valid = True
         has_all_goals = [False for goal_belief in goal]
+        agent_beliefs = beliefs.copy()
+
         for node_name in trace:
             node = find(root, lambda node: node.name == node_name)
             if node and node.violation:
                 valid = False
                 print(f"Trace violates norm: {trace}")
                 break   
+
+            if node and hasattr(node, 'pre') and node.pre not in beliefs:
+                valid = False # pre does not match beliefs
+
+            if node and hasattr(node, 'post'):
+                agent_beliefs.append(node.post)
 
             for i, goal_belief in enumerate(goal):
                 if hasattr(node, 'post') and goal_belief in node.post:
