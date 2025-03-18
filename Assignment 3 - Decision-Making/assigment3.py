@@ -204,12 +204,16 @@ def main(json_tree, norm, goal, beliefs, preferences, output_dir=""):
             valid_traces.append(trace)
             valid_costs.append(cost)
 
-    # Remove_violate_parents(root)
-    output = RenderTree(root)
+    # Sort traces based on user preferences.
+    indices = preferences[1]
+    sorted_traces_and_costs = sorted(zip(valid_traces, valid_costs), key=lambda x: tuple(x[1][i] for i in indices))
+    valid_traces, valid_costs = zip(*sorted_traces_and_costs) if sorted_traces_and_costs else ([], [])
+
+    # Return the best trace.
+    output = valid_traces[0] if valid_traces else []
     if print_mode:
-        # print(output)
-        output_file = os.path.join(output_dir, "annotated_tree.png")
-        export_tree_to_png(root, output_file)
+        print(f"Best trace: {output}")
+    
     return output
 
 if __name__ == "__main__":
