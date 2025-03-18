@@ -144,6 +144,12 @@ def main(json_tree, norm, goal, beliefs, preferences, output_dir=""):
     root = build_tree(json_tree)
     annotate_tree(root, norm)
 
+    traces = generate_traces(root)
+    if print_mode:
+        print(f"Generated {len(traces)} traces:")
+        for trace in traces:
+            print(trace)
+
     # remove_violate_parents(root)
     output = RenderTree(root)
     if print_mode:
