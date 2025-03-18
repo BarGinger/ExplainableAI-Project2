@@ -1,10 +1,4 @@
-getCoffee -> getKitchenCoffee -> getStaffCard -> getOwnCard
-getCoffee -> getKitchenCoffee -> getStaffCard -> getOthersCard
-getCoffee -> getKitchenCoffee -> getStaffCard -> gotoKitchen -> getCoffeeKitchen
-getCoffee -> getKitchenCoffee -> getStaffCard -> gotoKitchen -> getCoffeeKitchen
+getCoffee -> getKitchenCoffee -> getStaffCard -> getOwnCard -> gotoKitchen -> getCoffeeKitchen
+getCoffee -> getKitchenCoffee -> getStaffCard -> getOthersCard -> gotoKitchen -> getCoffeeKitchen
 getCoffee -> getAnnOfficeCoffee -> gotoAnnOffice -> getPod -> getCoffeeAnnOffice
-getCoffee -> getAnnOfficeCoffee -> gotoAnnOffice -> getPod -> getCoffeeAnnOffice
-getCoffee -> getAnnOfficeCoffee -> gotoAnnOffice -> getPod -> getCoffeeAnnOffice
-getCoffee -> getShopCoffee -> gotoShop -> payShop -> getCoffeeShop
-getCoffee -> getShopCoffee -> gotoShop -> payShop -> getCoffeeShop
 getCoffee -> getShopCoffee -> gotoShop -> payShop -> getCoffeeShop

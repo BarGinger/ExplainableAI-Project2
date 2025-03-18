@@ -29,6 +29,7 @@ from anytree.importer import DictImporter
 from anytree.exporter import DotExporter
 from anytree import Node, RenderTree, AsciiStyle, PreOrderIter
 from anytree.search import find
+from itertools import product
 
 def find_starting_node(root, starting_node_name):
     """
@@ -49,59 +50,26 @@ def find_starting_node(root, starting_node_name):
 
     return node
 
-# def generate_traces(starting_node):
-#     traces = []
+def generate_traces(node):
+    """Recursively generates all possible traces from the given node."""
+    if not hasattr(node, 'children') or not node.children:
+        return [[node.name]]  # Leaf node (ACT), end of a trace
     
-#     def build_trace(trace, node):
-#         if node.type == "OR":  
-#             for child in node.children:
-#                 build_trace(trace + [child.name], child)  # Create separate traces for each OR path
-                
-#         elif node.type in ["SEQ", "AND"]:  
-#             new_trace = trace[:]  # Copy trace for sequential execution
-#             for child in node.children:
-#                 new_trace.append(child.name)  
-#             for child in node.children:
-#                 build_trace(new_trace, child)  # Continue the same trace for SEQ/AND nodes
-                
-#         else:  # Leaf nodes (ACT)
-#             traces.append(trace)
-    
-#     for node in PreOrderIter(starting_node):  # Iterate over the tree in pre-order
-#         if node.name == starting_node.name:
-#             build_trace([node.name], node)  # Start with the given node
-    
-#     return traces
-
-# from anytree.iterators import PreOrderIter
-
-def generate_traces(starting_node):
     traces = []
-
-    def traverse(node, current_trace):
-        name = node.name
-        current_trace.append(name)
-
-        if not node.children:  # If it's a leaf node, save the trace
-            traces.append(current_trace)
-            return
-
-        if node.type == "OR":
-            for child in node.children:
-                traverse(child, current_trace.copy())  # OR nodes create separate paths
-
-        elif node.type in ["SEQ", "AND"]:
-            for child in node.children:
-                traverse(child, current_trace)  # Process children sequentially
-
-    def build_traces(node, current_trace):
-        if node.type in ["SEQ", "AND"]:
-            for child in node.children:
-                build_traces(child, current_trace)
-        else:
-            traverse(node, current_trace)
-
-    build_traces(starting_node, [])
+    
+    if node.type == "OR":
+        # OR node: Select one child at a time
+        for child in node.children:
+            child_traces = generate_traces(child)
+            for trace in child_traces:
+                traces.append([node.name] + trace)
+    
+    elif node.type == "SEQ":
+        # SEQ/AND node: Concatenate traces of all children in order
+        child_traces = [generate_traces(child) for child in node.children]
+        for combination in product(*child_traces):
+            traces.append([node.name] + [step for trace in combination for step in trace])
+    
     return traces
 
 
@@ -125,7 +93,6 @@ def main(json_tree, starting_node_name, output_dir=""):
 
     # Create output - printed structured representation using the RenderTree function
     output = RenderTree(root)
-    # print(output)
 
     # Visualize the tree graphically as an image
     DotExporter(root).to_picture(f"{output_dir}/tree.png")
@@ -167,4 +134,4 @@ if __name__ == "__main__":
         json_tree = json.load(file)
     main(json_tree, starting_node_name="getCoffee", output_dir=current_dir)
 
-    print("Exercise 0 is done running")
+    print("Exercise 1 is done running")

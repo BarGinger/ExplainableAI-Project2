@@ -5,3 +5,4 @@
 *.rdb
 
 .Rhistory
+.vscode/launch.json
