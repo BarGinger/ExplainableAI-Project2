@@ -2,6 +2,8 @@ from anytree.importer import DictImporter
 from anytree.search import find
 from itertools import product
 
+print_mode = False
+
 def find_starting_node(root, starting_node_name):
     """
     Traverse the tree to find the starting node by name.
@@ -14,10 +16,11 @@ def find_starting_node(root, starting_node_name):
     Node: The starting node if found, otherwise None
     """
     node = find(root, lambda node: node.name == starting_node_name)
-    if node:
-        print(f"Node found: {node.name}")
-    else:
-        print("Node not found")
+    if print_mode:
+        if node:
+            print(f"Node found: {node.name}")
+        else:
+            print("Node not found")
 
     return node
 
@@ -35,7 +38,7 @@ def generate_traces(node):
             for trace in child_traces:
                 traces.append([node.name] + trace)
     
-    elif node.type == "SEQ":
+    elif node.type == "SEQ" or node.type == "AND":
         # SEQ/AND node: Concatenate traces of all children in order
         child_traces = [generate_traces(child) for child in node.children]
         for combination in product(*child_traces):
@@ -44,7 +47,7 @@ def generate_traces(node):
     return traces
 
 
-def main(json_tree, starting_node_name):
+def main_part1(json_tree, starting_node_name, output_dir=""):
     """
     Parameters:
     json_tree (json object): The goal tree 
@@ -65,19 +68,30 @@ def main(json_tree, starting_node_name):
     # Find the goal node
     starting_node = find_starting_node(root, starting_node_name)
 
-    print("Traversing the tree to generate traces")
+    if print_mode:
+        print("Traversing the tree to generate traces")
     traces = generate_traces(starting_node)
-    
-    print("Traces generated:")
-    for trace in traces:
-        print(trace)
 
     # Pretty print the traces
-    print("\nPretty Printed Traces:")
-    for trace in traces:
-        print(" -> ".join(trace))
-    
-    
+    if print_mode:
+        print("Traces generated:")
+        for trace in traces:
+            print(trace)
+
+        print("\nPretty Printed Traces:")
+        for trace in traces:
+            print(" -> ".join(trace))
+
+        # Export traces to a text file
+        with open(f"{output_dir}/traces.txt", "w") as file:
+            for trace in traces:
+                file.write(str(trace) + "\n")
+
+        # Export pretty printed traces to a text file
+        with open(f"{output_dir}/pretty_traces.txt", "w") as file:
+            for trace in traces:
+                file.write(" -> ".join(trace) + "\n")
+
     return traces
     
-output = main(json_tree, starting_node_name)
+output = main_part1(json_tree, starting_node_name)
