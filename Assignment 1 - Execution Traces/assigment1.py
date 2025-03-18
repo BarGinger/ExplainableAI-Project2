@@ -91,9 +91,6 @@ def main(json_tree, starting_node_name, output_dir=""):
     importer = DictImporter()
     root = importer.import_(json_tree)
 
-    # Create output - printed structured representation using the RenderTree function
-    output = RenderTree(root)
-
     # Visualize the tree graphically as an image
     DotExporter(root).to_picture(f"{output_dir}/tree.png")
 
@@ -127,13 +124,11 @@ def main(json_tree, starting_node_name, output_dir=""):
 if __name__ == "__main__":
     import json
     import os
-
-    print(os.environ)
     
-    # current_dir = os.path.dirname(__file__)
-    # # Read the JSON file into a dictionary
-    # with open(f'{current_dir}/coffee.json', 'r') as file:
-    #     json_tree = json.load(file)
-    # main(json_tree, starting_node_name="getCoffee", output_dir=current_dir)
+    current_dir = os.path.dirname(__file__)
+    # Read the JSON file into a dictionary
+    with open(f'{current_dir}/coffee.json', 'r') as file:
+        json_tree = json.load(file)
+    main(json_tree, starting_node_name="getCoffee", output_dir=current_dir)
 
-    # print("Exercise 1 is done running")
+    print("Exercise 1 is done running")
