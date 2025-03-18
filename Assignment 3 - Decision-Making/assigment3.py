@@ -27,18 +27,14 @@ goal	['haveCoffee']
 beliefs	['haveMoney']
 preferences	[['quality', 'price', 'time'], [2, 0, 1]]
 After saving and grading this variant, press the New Variant button to try a different variant.
-
 """
- # Import nessary packages
-from anytree import Node, RenderTree
+
+# Import necessary packages
+from anytree import Node, RenderTree, AnyNode
 from anytree.importer import DictImporter
 from anytree.exporter import DotExporter
-from anytree import Node, RenderTree, AsciiStyle, PreOrderIter
 from anytree.search import find
 from itertools import product
-from anytree import NodeMixin, RenderTree, AnyNode
-from anytree import RenderTree, AnyNode
-from anytree.importer import DictImporter
 import json
 import os
 import numpy as np
@@ -66,15 +62,18 @@ def find_starting_node(root, starting_node_name):
     return node
 
 def generate_traces(node, calc_cost=False):
-    """Recursively generates all possible traces from the given node.
+    """
+    Recursively generates all possible traces from the given node.
+
     Parameters:
     node (Node): The current node in the tree
     calc_cost (bool): Whether to calculate the cost of each trace
+
     Returns:
     list: A list of all possible traces from the given node
     list: A list of the cost of each trace
     """
-    if not hasattr(node, 'children') or not node.children: # and hasattr(node, 'violation') and node.violation is False:
+    if not hasattr(node, 'children') or not node.children:
         if calc_cost:
             return [[node.name]], [node.costs]  # Leaf node (ACT), end of a trace
         else:
@@ -98,7 +97,6 @@ def generate_traces(node, calc_cost=False):
         child_traces = []
         child_costs = []
         for child in node.children:
-            # if hasattr(child, 'violation') and child.violation is False:
             child_traces_i, child_costs_i = generate_traces(child, calc_cost)
             child_traces.append(child_traces_i)
             child_costs.append(child_costs_i)
@@ -112,9 +110,17 @@ def generate_traces(node, calc_cost=False):
 
     return traces, costs
 
-
 def build_tree(json_node, parent=None):
-    # Build the entire tree
+    """
+    Build the entire tree from the JSON object.
+
+    Parameters:
+    json_node (dict): The JSON object representing the tree
+    parent (Node): The parent node
+
+    Returns:
+    Node: The root node of the tree
+    """
     attributes = {k: v for k, v in json_node.items() if k not in ['name', 'type', 'children']}
     node = AnyNode(name=json_node['name'], type=json_node['type'], violation=False, parent=parent, **attributes)
     
@@ -126,28 +132,34 @@ def build_tree(json_node, parent=None):
 def annotate_tree(node, norm):
     """
     Annotates the tree by marking nodes that violate the given norm.
+
+    Parameters:
+    node (Node): The current node in the tree
+    norm (dict): The norm
+
     - If the norm is of type 'P' (prohibited), a node violates it if its name is in norm['actions'].
     - If the norm is of type 'O' (obligatory), a node violates it if it is an action but not in norm['actions'].
     """
-    # Recursive function to run on the whole tree.
     for child in node.children:
         annotate_tree(child, norm)
 
-    # Based on norm gives P or O.
-    if norm['type'] == 'P':
+    if hasattr(norm, 'type') and norm['type'] == 'P':
         node.violation = node.name in norm['actions']
-    elif norm['type'] == 'O':
+    elif hasattr(norm, 'type') and norm['type'] == 'O':
         node.violation = node.name not in norm['actions'] and node.type == 'ACT'
 
-    # Parent check - Checks if child node has violated the norms.
-    if node.type == 'OR':
+    if hasattr(node, 'type') and node.type == 'OR':
         node.violation = all(child.violation for child in node.children)
-    elif node.type in ['SEQ', 'AND']:
+    elif hasattr(node, 'type') and node.type in ['SEQ', 'AND']:
         node.violation = any(child.violation for child in node.children)
 
 def export_tree_to_png(root, output_file):
     """
     Exports the tree to a PNG file with node properties.
+
+    Parameters:
+    root (Node): The root node of the tree
+    output_file (string): The path to the output file
     """
     DotExporter(root, 
                 nodeattrfunc=lambda node: f'label="{node.name}\nViolation: {node.violation}"'
@@ -155,25 +167,26 @@ def export_tree_to_png(root, output_file):
 
 def main(json_tree, norm, goal, beliefs, preferences, output_dir=""):
     """
+    Main function to determine the best execution trace for the agent.
+
     Parameters:
     json_tree (json object): The goal tree 
     norm (dict): The norm
-    goal	(list):	The goal of the agent: a set of beliefs (strings) of the agent that must be true at the end of the execution of the trace.
-    beliefs	(list):	A set of strings representing the initial beliefs of the agents.
-    preferences	(list):	A pair describing the preference of the end-user.
+    goal (list): The goal of the agent: a set of beliefs (strings) of the agent that must be true at the end of the execution of the trace.
+    beliefs (list): A set of strings representing the initial beliefs of the agents.
+    preferences (list): A pair describing the preference of the end-user.
     output_dir (string): The directory to save the output image
 
-    return:
-    output (anytree.render.RenderTree): The annotated tree, rendered using the function RenderTree of anytree.
+    Returns:
+    output (list): A list of strings representing the execution trace chosen by the agent.
     """
-
     # Build the tree from the JSON object
     root = build_tree(json_tree)
 
     # Annotate the tree based on the given norm
     annotate_tree(root, norm)
 
-    # Generting all possible traces of given tree, and calculating the cost of each trace
+    # Generating all possible traces of given tree, and calculating the cost of each trace
     traces, costs = generate_traces(root, calc_cost=True)
 
     if print_mode:
@@ -182,7 +195,6 @@ def main(json_tree, norm, goal, beliefs, preferences, output_dir=""):
         for trace in traces:
             print(trace)
 
-    # Filter traces that violate norms.
     # Filter traces that violate norms and keep their respective costs
     valid_traces = []
     valid_costs = []
@@ -199,8 +211,9 @@ def main(json_tree, norm, goal, beliefs, preferences, output_dir=""):
                 print(f"Trace violates norm: {trace}")
                 break   
 
-            if node and hasattr(node, 'pre') and node.pre not in beliefs:
+            if node and hasattr(node, 'pre') and node.pre not in agent_beliefs:
                 valid = False # pre does not match beliefs
+                break   
 
             if node and hasattr(node, 'post'):
                 agent_beliefs.append(node.post)
@@ -231,7 +244,6 @@ if __name__ == "__main__":
     beliefs = ['haveMoney']
     preferences = [['quality', 'price', 'time'], [2, 0, 1]]
 
-    
     current_dir = os.path.dirname(__file__)
     # Read the JSON file into a dictionary
     with open(f'{current_dir}/coffee.json', 'r') as file:
