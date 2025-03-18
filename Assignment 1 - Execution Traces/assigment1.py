@@ -28,7 +28,7 @@ from anytree import Node, RenderTree
 from anytree.importer import DictImporter
 from anytree.exporter import DotExporter
 from anytree import Node, RenderTree, AsciiStyle, PreOrderIter
-
+from anytree.search import find
 
 def find_starting_node(root, starting_node_name):
     """
@@ -41,15 +41,13 @@ def find_starting_node(root, starting_node_name):
     return:
     Node: The starting node if found, otherwise None
     """
-    if root.name == starting_node_name:
-        return root
-    
-    for child in root.children:
-        result = find_starting_node(child, starting_node_name)
-        if result:
-            return result
+    node = find(root, lambda node: node.name == starting_node_name)
+    if node:
+        print(f"Node found: {node.name}")
+    else:
+        print("Node not found")
 
-    return None
+    return node
 
 # def generate_traces(starting_node):
 #     traces = []
@@ -81,24 +79,30 @@ def generate_traces(starting_node):
     traces = []
 
     def traverse(node, current_trace):
-        current_trace.append(node.name)
+        name = node.name
+        current_trace.append(name)
 
-        if not node.children:  # If it's a leaf node, store the trace
-            traces.append(current_trace.copy())
+        if not node.children:  # If it's a leaf node, save the trace
+            traces.append(current_trace)
+            return
 
-        elif node.type == "OR":
+        if node.type == "OR":
             for child in node.children:
-                traverse(child, current_trace.copy())  # New independent trace per OR branch
+                traverse(child, current_trace.copy())  # OR nodes create separate paths
 
         elif node.type in ["SEQ", "AND"]:
             for child in node.children:
-                traverse(child, current_trace)  # Extend the same trace for sequential execution
+                traverse(child, current_trace)  # Process children sequentially
 
-        current_trace.pop()  # Backtrack
+    def build_traces(node, current_trace):
+        if node.type in ["SEQ", "AND"]:
+            for child in node.children:
+                build_traces(child, current_trace)
+        else:
+            traverse(node, current_trace)
 
-    traverse(starting_node, [])
+    build_traces(starting_node, [])
     return traces
-
 
 
 def main(json_tree, starting_node_name, output_dir=""):
@@ -113,7 +117,7 @@ def main(json_tree, starting_node_name, output_dir=""):
     """
 
     # Print input
-    print(f" this is the JSON input: {json_tree}")
+    # print(f" this is the JSON input: {json_tree}")
 
     # Import dic input into anytree structure using anytree lib
     importer = DictImporter()
@@ -121,19 +125,13 @@ def main(json_tree, starting_node_name, output_dir=""):
 
     # Create output - printed structured representation using the RenderTree function
     output = RenderTree(root)
-    print(output)
+    # print(output)
 
     # Visualize the tree graphically as an image
     DotExporter(root).to_picture(f"{output_dir}/tree.png")
 
     # Find the goal node
     starting_node = find_starting_node(root, starting_node_name)
-
-    if starting_node is None:
-        print(f"Starting node {starting_node_name} not found in the tree")
-        return []
-    else:
-        print(f"Starting node {starting_node_name} found in the tree")
 
     print("Traversing the tree to generate traces")
     traces = generate_traces(starting_node)
