@@ -107,7 +107,7 @@ def generate_traces(node, calc_cost=False):
         
         if calc_cost:
             for combination in product(*child_costs):
-                costs.append(np.sum([cost for cost in combination]))
+                costs.append(np.sum([cost for cost in combination], axis=0))
 
     return traces, costs
 
@@ -181,7 +181,7 @@ def main(json_tree, norm, goal, beliefs, preferences, output_dir=""):
     # Remove_violate_parents(root)
     output = RenderTree(root)
     if print_mode:
-        print(output)
+        # print(output)
         output_file = os.path.join(output_dir, "annotated_tree.png")
         export_tree_to_png(root, output_file)
     return output
