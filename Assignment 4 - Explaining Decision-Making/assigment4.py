@@ -332,12 +332,77 @@ def generate_explanations(json_tree, norm, goal, beliefs, preferences, output_di
 
     explanations = []
 
+    """ 
+    (a) Pre-conditions of an action (denoted with a “P"). Requested format:
+        ['P', action name,
+        list of preconditions of the actions (including A) that were satisfied and that
+        made the execution of action A that is being explained possible]
+        Example: ['P', 'getOwnCard', ['ownCard']]
+        Note: No "P" factor should be included in the list if an action has no preconditions.
+    """
+
+    """
+    (b) A condition of a choice (“C"). Requested format:
+        ['C', name of alternative that was chosen for an OR node,
+        list of preconditions of the alternative that were satisfied and that
+        made the choice possible]
+        Example: ['C', 'getKitchenCoffee', ['staffCardAvailable']]
+        Note: getKitchenCoffee is one of the alternatives of the getCoffee OR node
+    """
+
+    """
+    (c) A value statement (“V"). Requested format:
+        ['V', name of an alternative that was chosen for an OR node,
+        list of costs for that alternative,
+        '>',
+        name of another alternative of an OR node that was NOT chosen,
+        list of costs for that alternative]
+        Example:
+        ['V', 'getKitchenCoffee', [5.0, 0.0, 3.0],
+        '>',
+        'getAnnOfficeCoffee', [2.0, 0.0, 6.0]]
+    """
+
+    """
+    (d) A norm ("N"). Requested format:
+        ['N', name of an alternative of an OR node that was NOT chosen because
+        it violates (possibly through its children) a norm,
+        the norm that is violated]
+        Example: ['N', 'getShopCoffee', 'P(payShop)']
+    """
+
+    """
+    (e) A failed condition of a choice ("F"). Requested format:
+        ['F',
+        name of an alternative of an OR node that was NOT chosen because
+        (some of) its pre-conditions were not satisfied,
+        list of preconditions of the alternative that were NOT
+        satisfied and made the choice not possible]
+        Example: ['F', 'getKitchenCoffee', ['staffCardAvailable']]
+    """
+
+
+    """
+    (f) A link (“L"). Requested format:
+        ['L', name of the node, '->', name of the linked node]
+        Example: ['L', 'payShop', '->', 'getCoffeeShop']
+        Note: a node a links to another node b if a's attribute "link" contains the
+        name of b. Furthermore, if the linked node b also has a link to another node c,
+        then the explanation should also include such a link (and all the links forming
+        a chain starting from a) to the explanation, i.e., for each link in the chain an
+        explanation in the requested format above should included in the list.
+    """
+
+
     """ (g) A goal ("D"). Requested format:
         ['D', name of the goal]
         Example: ['D', 'getKitchenCoffee']
     """
+    if goal:
+        for g in goal:
+            add_explanation(explanations, key='D', value=g)
 
-    """ (h) The user preference (”U”). Requested format:
+    """ (h) The user preference ("U"). Requested format:
         ['U' the pair given in input as user preference]
         Example: ['U', [['quality', 'price', 'time'], [1, 2, 0]]]
     """
@@ -360,7 +425,7 @@ if __name__ == "__main__":
     # Read the JSON file into a dictionary
     with open(f'{current_dir}/coffee.json', 'r') as file:
         json_tree = json.load(file)
-    main(json_tree, norm, goal, beliefs, preferences, output_dir=current_dir)
+    generate_explanations(json_tree, norm, goal, beliefs, preferences, output_dir=current_dir)
 
     if print_mode:
         print("Exercise 4 is done running!")
