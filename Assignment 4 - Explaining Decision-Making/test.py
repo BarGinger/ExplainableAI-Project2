@@ -15,6 +15,39 @@ class TestAssignment3(unittest.TestCase):
         with open(f'{self.current_dir}/coffee.json', 'r') as file:
             self.json_tree = json.load(file)
 
+    def compare_outputs(self, output, expected_output, test_index):
+        """
+        Helper function to compare the output with the expected output and print detailed differences.
+
+        Parameters:
+        output (list): The actual output from the function
+        expected_output (list): The expected output
+        test_index (int): The index of the test case
+        """
+        try:
+            self.assertEqual(output, expected_output)
+            print(Fore.GREEN + f"Test case {test_index} passed")
+        except AssertionError:
+            print(Fore.RED + f"Test case {test_index} failed")
+            print(Fore.RED + f"Expected: {expected_output}")
+            print(Fore.RED + f"Got: {output}")
+
+            # Find elements in expected_output that are not in output
+            missing_from_output = [item for item in expected_output if item not in output]
+            if missing_from_output:
+                print(Fore.RED + "Missing from output:")
+                for item in missing_from_output:
+                    print(Fore.RED + f"  {item}")
+
+            # Find elements in output that are not in expected_output
+            extra_in_output = [item for item in output if item not in expected_output]
+            if extra_in_output:
+                print(Fore.RED + "Extra in output:")
+                for item in extra_in_output:
+                    print(Fore.RED + f"  {item}")
+
+            raise
+
     def test_case_1(self):
         norm = {"type": "P", "actions": ["payShop"]}
         beliefs = ["staffCardAvailable", "ownCard", "colleagueAvailable", "haveMoney", "AnnInOffice"]
@@ -35,15 +68,7 @@ class TestAssignment3(unittest.TestCase):
         ]
 
         output = generate_explanations(self.json_tree, norm, goal, beliefs, preferences, action_to_explain)
-        try:
-            self.assertEqual(output, expected_output)
-            print(Fore.GREEN + "Test case 1 passed")
-        except AssertionError:
-            print(Fore.RED + "Test case 1 failed")
-            print(Fore.RED + f"Expected: {expected_output}")
-            print(Fore.RED + f"Got: {output}")
-            raise
-    
+        self.compare_outputs(output, expected_output, 1)
 
 if __name__ == '__main__':
     unittest.main()

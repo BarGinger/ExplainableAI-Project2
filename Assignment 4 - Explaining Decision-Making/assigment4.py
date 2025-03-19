@@ -314,6 +314,46 @@ def add_explanation(explanations, key="", node_name=None, value=[]):
     """
     explanations.append(create_explanation(key, node_name, value))
 
+def get_cost_of_node(node):
+    """
+    Calculate the cost of a given node.
+
+    Parameters:
+    node (Node): The node for which to calculate the cost
+
+    Returns:
+    list: The cost of the node
+    """
+    if hasattr(node, 'costs'):
+        return node.costs
+
+    # If the node has no children, it is a leaf node (ACT), return its cost
+    if not hasattr(node, 'children') or not node.children:
+        return []
+
+    costs = []
+
+    if node.type == "OR":
+        # OR node: Select the minimum cost among children
+        for child in node.children:
+            child_cost = get_cost_of_node(child)
+            if not costs or (child_cost and sum(child_cost) < sum(costs)):
+                costs = child_cost
+
+    elif node.type == "SEQ" or node.type == "AND":
+        # SEQ/AND node: Sum the costs of all children
+        for child in node.children:
+            child_cost = get_cost_of_node(child)
+            if child_cost:
+                if not costs:
+                    costs = child_cost
+                else:
+                    costs = [x + y for x, y in zip(costs, child_cost)]
+
+    return costs
+    
+
+
 
 def generate_explanations(json_tree, norm, goal, beliefs, preferences, action_to_explain, output_dir=""):
     """
@@ -369,7 +409,7 @@ def generate_explanations(json_tree, norm, goal, beliefs, preferences, action_to
             if hasattr(node, 'pre') and node.name in chosen_trace:
                 # Add preconditions of cuurent action to the global preconditions list
                 preconditions.extend(node.pre)
-                add_explanation(explanations, key='P', node_name=node.name, value=[preconditions])
+                add_explanation(explanations, key='P', node_name=node.name, value=[preconditions.copy()])
             
             # Update agent beliefs given the execution of the current node
             if hasattr(node, 'post'):
@@ -389,7 +429,7 @@ def generate_explanations(json_tree, norm, goal, beliefs, preferences, action_to
                             Example: ['C', 'getKitchenCoffee', ['staffCardAvailable']]
                             Note: getKitchenCoffee is one of the alternatives of the getCoffee OR node
                         """
-                        add_explanation(explanations, key='C', node_name=child_name, value=[preconditions])
+                        add_explanation(explanations, key='C', node_name=child_name, value=[chosen_child.pre.copy()])
                     else:
                         """
                         An explanation for each alternative not selected, either via a ”N” factor, a
@@ -408,7 +448,8 @@ def generate_explanations(json_tree, norm, goal, beliefs, preferences, action_to
                             Example: ['N', 'getShopCoffee', 'P(payShop)']
                         """
                         if hasattr(child, "violation") and child.violation:
-                            add_explanation(explanations, key='N', node_name=child.name, value=[norm])
+                            norm_string = f"{norm['type']}({', '.join(norm['actions'])})"
+                            add_explanation(explanations, key='N', node_name=child.name, value=[norm_string])
                             continue
                         """
                         (c) A value statement (“V"). Requested format:
@@ -426,11 +467,13 @@ def generate_explanations(json_tree, norm, goal, beliefs, preferences, action_to
                         if hasattr(child, 'pre'):
                             unsatisfied_preconditions = [pre for pre in child.pre if pre not in agent_beliefs]             
 
-                        if len(unsatisfied_preconditions) > 0:
-                            child_cost = child.costs
+                        if len(unsatisfied_preconditions) == 0:
+                            child_cost = get_cost_of_node(child)
+                            chosen_child_cost = get_cost_of_node(chosen_child)
+
                             add_explanation(explanations, key='V', 
                                             node_name=child_name, 
-                                            value=[child_name, child_cost, '>', chosen_child.name, chosen_child.costs])
+                                            value=[chosen_child.name, chosen_child_cost, '>',child_name, child_cost])
                             continue
                         
 
