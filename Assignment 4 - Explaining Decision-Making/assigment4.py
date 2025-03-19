@@ -44,9 +44,7 @@ For each parent of action_to_explain, if it is a goal node (either OR or AND or 
 Each explanatory factor should be represented as a list where the first element of a list is a string representing the type of factor (denoted with a letter prefix) and the rest of the list contains relevant informations for the explanatory factor, as explained in the Project description.
 """
 
-# Import necessary packages
-from anytree import Node, RenderTree, AnyNode
-from anytree.importer import DictImporter
+from anytree import AnyNode
 from anytree.exporter import DotExporter
 from anytree.search import find
 from itertools import product
@@ -54,7 +52,7 @@ import json
 import os
 import numpy as np
 
-print_mode = True
+print_mode = False
 
 def find_starting_node(root, starting_node_name):
     """
@@ -81,22 +79,23 @@ def generate_traces(node, calc_cost=False):
     Recursively generates all possible traces from the given node.
 
     Parameters:
-    node (Node): The current node in the tree
-    calc_cost (bool): Whether to calculate the cost of each trace
+    node (Node): The current node in the tree.
+    calc_cost (bool): Whether to calculate the cost of each trace.
 
     Returns:
-    list: A list of all possible traces from the given node
-    list: A list of the cost of each trace
+    list: A list of all possible traces from the given node.
+    list: A list of the cost of each trace.
     """
+    # If the node has no children, it is a leaf node (ACT), end of a trace
     if not hasattr(node, 'children') or not node.children:
         if calc_cost:
-            return [[node.name]], [node.costs]  # Leaf node (ACT), end of a trace
+            return [[node.name]], [node.costs]
         else:
-            return [[node.name]], []  # Leaf node (ACT), end of a trace
-    
+            return [[node.name]], []
+
     traces = []
     costs = []
-    
+
     if node.type == "OR":
         # OR node: Select one child at a time
         for child in node.children:
@@ -106,20 +105,23 @@ def generate_traces(node, calc_cost=False):
             if calc_cost:
                 for cost in child_cost:
                     costs.append(cost)
-    
+
     elif node.type == "SEQ" or node.type == "AND":
         # SEQ/AND node: Concatenate traces of all children in order
         child_traces = []
         child_costs = []
         for child in node.children:
+            # Recursively generate traces and costs for each child
             child_traces_i, child_costs_i = generate_traces(child, calc_cost)
             child_traces.append(child_traces_i)
             child_costs.append(child_costs_i)
-    
+
+        # Generate all combinations of traces from children
         for combination in product(*child_traces):
             traces.append([node.name] + [step for trace in combination for step in trace])
-        
+
         if calc_cost:
+            # Sum the costs for each combination of child traces
             for combination in product(*child_costs):
                 costs.append(np.sum([cost for cost in combination], axis=0))
 
@@ -136,9 +138,13 @@ def build_tree(json_node, parent=None):
     Returns:
     Node: The root node of the tree
     """
+    # Extract attributes from the JSON node, excluding 'name', 'type', and 'children'
     attributes = {k: v for k, v in json_node.items() if k not in ['name', 'type', 'children']}
+    
+    # Create a new node with the extracted attributes
     node = AnyNode(name=json_node['name'], type=json_node['type'], violation=False, parent=parent, **attributes)
     
+    # Recursively build the tree for each child node
     for child in json_node.get('children', []):
         build_tree(child, node)
     
@@ -155,17 +161,23 @@ def annotate_tree(node, norm):
     - If the norm is of type 'P' (prohibited), a node violates it if its name is in norm['actions'].
     - If the norm is of type 'O' (obligatory), a node violates it if it is an action but not in norm['actions'].
     """
+    # Recursively annotate each child node
     for child in node.children:
         annotate_tree(child, norm)
 
+    # Check if the current node violates the norm
     if 'type' in norm:
         if norm['type'] == 'P':
+            # Prohibited norm: node violates if its name is in norm['actions']
             node.violation = node.name in norm['actions']
         elif norm['type'] == 'O':
+            # Obligatory norm: node violates if it is an action but not in norm['actions']
             node.violation = node.name not in norm['actions'] and node.type == 'ACT'
 
+    # For OR nodes, the node violates if all children violate
     if hasattr(node, 'type') and node.type == 'OR':
         node.violation = all(child.violation for child in node.children)
+    # For SEQ/AND nodes, the node violates if any child violates
     elif hasattr(node, 'type') and node.type in ['SEQ', 'AND']:
         node.violation = any(child.violation for child in node.children)
 
@@ -191,7 +203,7 @@ def main(json_tree, norm, goal, beliefs, preferences, action_to_explain, output_
     goal (list): The goal of the agent: a set of beliefs (strings) of the agent that must be true at the end of the execution of the trace.
     beliefs (list): A set of strings representing the initial beliefs of the agents.
     preferences (list): A pair describing the preference of the end-user.
-    action_to_explain (string): The name of the action to explain
+    action_to_explain (string): The name of the action to explain.
     output_dir (string): The directory to save the output image
 
     Returns:
@@ -203,7 +215,7 @@ def main(json_tree, norm, goal, beliefs, preferences, action_to_explain, output_
     # Annotate the tree based on the given norm
     annotate_tree(root, norm)
 
-    # Generating all possible traces of given tree, and calculating the cost of each trace
+    # Generate all possible traces of the given tree, and calculate the cost of each trace
     traces, costs = generate_traces(root, calc_cost=True)
 
     if print_mode:
@@ -224,16 +236,18 @@ def main(json_tree, norm, goal, beliefs, preferences, action_to_explain, output_
         for node_name in trace:
             node = find(root, lambda node: node.name == node_name)
 
-            # check if node found
+            # Check if node found
             if not node:
                 continue
 
+            # Check if the node violates any norms
             if node.violation:
                 valid = False
                 if print_mode:
                     print(f"Trace violates norm: {trace}")
                 break  
 
+            # Check if the node violates any preconditions
             if (node and hasattr(node, 'pre') and any(pre not in agent_beliefs for pre in node.pre)):
                 valid = False
                 if print_mode:
@@ -242,8 +256,7 @@ def main(json_tree, norm, goal, beliefs, preferences, action_to_explain, output_
                     print(f"Node pre: {node.pre}")
                 break
 
-            # Update agent beliefs given me executed current node
-            # add cuurent node post to agent beliefs
+            # Update agent beliefs given the execution of the current node
             if node and hasattr(node, 'post'):
                 agent_beliefs.extend(node.post)
 
@@ -252,16 +265,18 @@ def main(json_tree, norm, goal, beliefs, preferences, action_to_explain, output_
                     if hasattr(node, 'post') and goal_belief in node.post:
                         has_all_goals[i] = True
 
+        # If the trace is valid and all goals are achieved, add it to the valid traces
         if valid and all(has_all_goals):            
             valid_traces.append(trace)
             valid_costs.append(cost)
 
-    # Sort traces based on user preferences.
-    indices = preferences[1]
-    sorted_traces_and_costs = sorted(zip(valid_traces, valid_costs), key=lambda x: tuple(x[1][i] for i in indices))
-    valid_traces, valid_costs = zip(*sorted_traces_and_costs) if sorted_traces_and_costs else ([], [])
+    # Sort traces based on user preferences
+    if preferences and len(preferences) == 2:
+        indices = preferences[1]
+        sorted_traces_and_costs = sorted(zip(valid_traces, valid_costs), key=lambda x: tuple(x[1][i] for i in indices))
+        valid_traces, valid_costs = zip(*sorted_traces_and_costs) if sorted_traces_and_costs else ([], [])
 
-    # Return the best trace.
+    # Return the best trace
     output = valid_traces[0] if valid_traces else []
     if print_mode:
         print(f"Best trace: {output}")
