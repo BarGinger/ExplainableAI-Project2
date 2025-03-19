@@ -47,6 +47,7 @@ Each explanatory factor should be represented as a list where the first element 
 from anytree import AnyNode
 from anytree.exporter import DotExporter
 from anytree.search import find
+from anytree import PreOrderIter
 from itertools import product
 import json
 import os
@@ -206,7 +207,8 @@ def make_decision(json_tree, norm, goal, beliefs, preferences, output_dir=""):
     output_dir (string): The directory to save the output image
 
     Returns:
-    output (list): A list of strings representing the execution trace chosen by the agent.
+    tree (Node): The root node of the tree
+    chosen_trace (list): A list of strings representing the execution trace chosen by the agent.
     """
     # Build the tree from the JSON object
     root = build_tree(json_tree)
@@ -276,14 +278,14 @@ def make_decision(json_tree, norm, goal, beliefs, preferences, output_dir=""):
         valid_traces, valid_costs = zip(*sorted_traces_and_costs) if sorted_traces_and_costs else ([], [])
 
     # Return the best trace
-    output = valid_traces[0] if valid_traces else []
+    chosen_trace = valid_traces[0] if valid_traces else []
     if print_mode:
-        print(f"Best trace: {output}")
+        print(f"Best trace: {chosen_trace}")
     
-    return output
+    return root, chosen_trace
 
 
-def create_explanation(key="", node_name=None, value=""):
+def create_explanation(key="", node_name=None, value=[]):
     """
     Creates an explanation for a given key, node name, and value.
 
@@ -296,11 +298,11 @@ def create_explanation(key="", node_name=None, value=""):
     list: A list representing the explanation
     """
     if node_name is None:
-        return [key, value]
+        return [key] + value
     
-    return [key, node_name, value]
+    return [key, node_name] + value
 
-def add_explanation(explanations, key="", node_name=None, value=""):
+def add_explanation(explanations, key="", node_name=None, value=[]):
     """
     Adds an explanation to the list of explanations.
 
@@ -308,12 +310,12 @@ def add_explanation(explanations, key="", node_name=None, value=""):
     explanations (list): The list of explanations
     key (string): The key of the explanation
     node_name (string): The name of the node
-    value (string): The value of the explanation
+    value (list): The value of the explanation
     """
     explanations.append(create_explanation(key, node_name, value))
 
 
-def generate_explanations(json_tree, norm, goal, beliefs, preferences, output_dir=""):
+def generate_explanations(json_tree, norm, goal, beliefs, preferences, action_to_explain, output_dir=""):
     """
     Explain why a certain action was executed as part of a selected execution trace
 
@@ -332,82 +334,152 @@ def generate_explanations(json_tree, norm, goal, beliefs, preferences, output_di
 
     explanations = []
 
-    """ 
-    (a) Pre-conditions of an action (denoted with a “P"). Requested format:
-        ['P', action name,
-        list of preconditions of the actions (including A) that were satisfied and that
-        made the execution of action A that is being explained possible]
-        Example: ['P', 'getOwnCard', ['ownCard']]
-        Note: No "P" factor should be included in the list if an action has no preconditions.
-    """
+    root, chosen_trace = make_decision(json_tree, norm, goal, beliefs, preferences, output_dir)
 
-    """
-    (b) A condition of a choice (“C"). Requested format:
-        ['C', name of alternative that was chosen for an OR node,
-        list of preconditions of the alternative that were satisfied and that
-        made the choice possible]
-        Example: ['C', 'getKitchenCoffee', ['staffCardAvailable']]
-        Note: getKitchenCoffee is one of the alternatives of the getCoffee OR node
-    """
-
-    """
-    (c) A value statement (“V"). Requested format:
-        ['V', name of an alternative that was chosen for an OR node,
-        list of costs for that alternative,
-        '>',
-        name of another alternative of an OR node that was NOT chosen,
-        list of costs for that alternative]
-        Example:
-        ['V', 'getKitchenCoffee', [5.0, 0.0, 3.0],
-        '>',
-        'getAnnOfficeCoffee', [2.0, 0.0, 6.0]]
-    """
-
-    """
-    (d) A norm ("N"). Requested format:
-        ['N', name of an alternative of an OR node that was NOT chosen because
-        it violates (possibly through its children) a norm,
-        the norm that is violated]
-        Example: ['N', 'getShopCoffee', 'P(payShop)']
-    """
-
-    """
-    (e) A failed condition of a choice ("F"). Requested format:
-        ['F',
-        name of an alternative of an OR node that was NOT chosen because
-        (some of) its pre-conditions were not satisfied,
-        list of preconditions of the alternative that were NOT
-        satisfied and made the choice not possible]
-        Example: ['F', 'getKitchenCoffee', ['staffCardAvailable']]
-    """
+    print(f"Chosen trace: {chosen_trace}")
+    if action_to_explain not in chosen_trace:
+        print(f"Action to explain: {action_to_explain} not in trace")
+        # If the action is not in the trace, return an empty list
+        return []
+    else:
+        print(f"Action to explain: {action_to_explain} in trace")
 
 
     """
-    (f) A link (“L"). Requested format:
-        ['L', name of the node, '->', name of the linked node]
-        Example: ['L', 'payShop', '->', 'getCoffeeShop']
-        Note: a node a links to another node b if a's attribute "link" contains the
-        name of b. Furthermore, if the linked node b also has a link to another node c,
-        then the explanation should also include such a link (and all the links forming
-        a chain starting from a) to the explanation, i.e., for each link in the chain an
-        explanation in the requested format above should included in the list.
-    """
+    Starting generating the explanation, according to the pdf it should contain a list of explanatory factors as defined below.
+    The list should be obtained by traversing the tree in pre-order.
+    """    
+    preconditions = []
+    agent_beliefs = beliefs.copy()
+    for node in PreOrderIter(root):
+        current_node_name = node.name
+        current_node_type = None
+        if hasattr(node, 'type'):
+            current_node_type = node.type
 
+        if current_node_name in chosen_trace:
+            """ 
+            (a) Pre-conditions of an action (denoted with a “P"). Requested format:
+                ['P', action name,
+                list of preconditions of the actions (including A) that were satisfied and that
+                made the execution of action A that is being explained possible]
+                Example: ['P', 'getOwnCard', ['ownCard']]
+                Note: No "P" factor should be included in the list if an action has no preconditions.
+            """
+            if hasattr(node, 'pre') and node.name in chosen_trace:
+                # Add preconditions of cuurent action to the global preconditions list
+                preconditions.extend(node.pre)
+                add_explanation(explanations, key='P', node_name=node.name, value=[preconditions])
+            
+            # Update agent beliefs given the execution of the current node
+            if hasattr(node, 'post'):
+                agent_beliefs.extend(node.post)
 
-    """ (g) A goal ("D"). Requested format:
-        ['D', name of the goal]
-        Example: ['D', 'getKitchenCoffee']
-    """
-    if goal:
-        for g in goal:
-            add_explanation(explanations, key='D', value=g)
+            # Handle OR nodes (b, c, d, e explanations [C, V, N, F])
+            if current_node_type == 'OR':
+                chosen_child = next(child for child in node.children if child.name in chosen_trace)
+                for child in node.children:
+                    child_name = child.name
+                    if child_name in chosen_trace:
+                        """
+                        (b) A condition of a choice (“C"). Requested format:
+                            ['C', name of alternative that was chosen for an OR node,
+                            list of preconditions of the alternative that were satisfied and that
+                            made the choice possible]
+                            Example: ['C', 'getKitchenCoffee', ['staffCardAvailable']]
+                            Note: getKitchenCoffee is one of the alternatives of the getCoffee OR node
+                        """
+                        add_explanation(explanations, key='C', node_name=child_name, value=[preconditions])
+                    else:
+                        """
+                        An explanation for each alternative not selected, either via a ”N” factor, a
+                        ”V” factor, or a ”F” factor explanation, depending on the reason. Note:
+                        if, for one alternative not selected, multiple reasons are true, only report
+                        the first factor, considering the order above (i.e., a ”V” factor only if no
+                        ”N” factor is relevant, and a ”F” factor only if no ”N” nor ”V” factors are
+                        releant).
+                        """
+
+                        """
+                        (d) A norm ("N"). Requested format:
+                            ['N', name of an alternative of an OR node that was NOT chosen because
+                            it violates (possibly through its children) a norm,
+                            the norm that is violated]
+                            Example: ['N', 'getShopCoffee', 'P(payShop)']
+                        """
+                        if hasattr(child, "violation") and child.violation:
+                            add_explanation(explanations, key='N', node_name=child.name, value=[norm])
+                            continue
+                        """
+                        (c) A value statement (“V"). Requested format:
+                            ['V', name of an alternative that was chosen for an OR node,
+                            list of costs for that alternative,
+                            '>',
+                            name of another alternative of an OR node that was NOT chosen,
+                            list of costs for that alternative]
+                            Example:
+                            ['V', 'getKitchenCoffee', [5.0, 0.0, 3.0],
+                            '>',
+                            'getAnnOfficeCoffee', [2.0, 0.0, 6.0]]
+                        """   
+                        unsatisfied_preconditions = []
+                        if hasattr(child, 'pre'):
+                            unsatisfied_preconditions = [pre for pre in child.pre if pre not in agent_beliefs]             
+
+                        if len(unsatisfied_preconditions) > 0:
+                            child_cost = child.costs
+                            add_explanation(explanations, key='V', 
+                                            node_name=child_name, 
+                                            value=[child_name, child_cost, '>', chosen_child.name, chosen_child.costs])
+                            continue
+                        
+
+                        """
+                        (e) A failed condition of a choice ("F"). Requested format:
+                            ['F', name of an alternative of an OR node that was NOT chosen because
+                            (some of) its pre-conditions were not satisfied,
+                            list of preconditions of the alternative that were NOT
+                            satisfied and made the choice not possible]
+                            Example: ['F', 'getKitchenCoffee', ['staffCardAvailable']]
+                        """                        
+                        add_explanation(explanations, key='F', node_name=child_name, value=[unsatisfied_preconditions])
+                        continue
+            
+            """ (g) A goal ("D"). Requested format:
+                ['D', name of the goal]
+                Example: ['D', 'getKitchenCoffee']
+            """
+            if current_node_type in ['SEQ', 'AND', 'OR']:
+                add_explanation(explanations, key='D', value=[current_node_name])
+
+        # Check if the current node is the action to explain
+        if current_node_name == action_to_explain:
+            """
+            (f) A link (“L"). Requested format:
+                ['L', name of the node, '->', name of the linked node]
+                Example: ['L', 'payShop', '->', 'getCoffeeShop']
+                Note: a node a links to another node b if a's attribute "link" contains the
+                name of b. Furthermore, if the linked node b also has a link to another node c,
+                then the explanation should also include such a link (and all the links forming
+                a chain starting from a) to the explanation, i.e., for each link in the chain an
+                explanation in the requested format above should included in the list.
+            """
+            if hasattr(node, 'link'):
+                dest_node_name = node.link
+                add_explanation(explanations, key='L',
+                                 node_name=current_node_name,
+                                 value=[current_node_name, '->', dest_node_name])
+            # Stop the traversal if the action to explain is reached
+            break
+
+    
 
     """ (h) The user preference ("U"). Requested format:
         ['U' the pair given in input as user preference]
         Example: ['U', [['quality', 'price', 'time'], [1, 2, 0]]]
     """
     if preferences and len(preferences) == 2:
-        add_explanation(explanations, key='U', value=preferences)
+        add_explanation(explanations, key='U', value=[preferences])
 
 
     return explanations
@@ -415,17 +487,23 @@ def generate_explanations(json_tree, norm, goal, beliefs, preferences, output_di
 # output =  main(json_tree, norm, goal, beliefs, preferences, action_to_explain)
 
 if __name__ == "__main__":
-    norm = {'type': 'P', 'actions': ['gotoKitchen']}
-    goal = ['haveCoffee']
-    beliefs = ['staffCardAvailable', 'ownCard']
-    preferences = [['quality', 'price', 'time'], [1, 2, 0]]
-    action_to_explain = "getOthersCard"
+    # norm = {'type': 'P', 'actions': ['gotoKitchen']}
+    # goal = ['haveCoffee']
+    # beliefs = ['staffCardAvailable', 'ownCard']
+    # preferences = [['quality', 'price', 'time'], [1, 2, 0]]
+    # action_to_explain = "getOthersCard"
+
+    norm = {"type": "P", "actions": ["payShop"]}
+    beliefs = ["staffCardAvailable", "ownCard", "colleagueAvailable", "haveMoney", "AnnInOffice"]
+    goal = ["haveCoffee"]
+    preferences = [["quality", "price", "time"], [1, 2, 0]]
+    action_to_explain = "getCoffeeKitchen"
 
     current_dir = os.path.dirname(__file__)
     # Read the JSON file into a dictionary
     with open(f'{current_dir}/coffee.json', 'r') as file:
         json_tree = json.load(file)
-    generate_explanations(json_tree, norm, goal, beliefs, preferences, output_dir=current_dir)
+    generate_explanations(json_tree, norm, goal, beliefs, preferences, action_to_explain, output_dir=current_dir)
 
     if print_mode:
         print("Exercise 4 is done running!")
