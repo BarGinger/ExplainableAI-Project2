@@ -1,7 +1,7 @@
 import unittest
 import json
 import os
-from assigment3 import main
+from assigment3 import make_decision
 from colorama import Fore, Style, init
 
 # Initialize colorama
@@ -22,7 +22,7 @@ class TestAssignment3(unittest.TestCase):
         preferences = [['quality', 'price', 'time'], [2, 0, 1]]
         expected_output = [] # ['getCoffee', 'getShopCoffee', 'gotoShop', 'payShop', 'getCoffeeShop']
 
-        output = main(self.json_tree, norm, goal, beliefs, preferences)
+        output = make_decision(self.json_tree, norm, goal, beliefs, preferences)
         try:
             self.assertEqual(output, expected_output)
             print(Fore.GREEN + "Test case 1 passed")
@@ -39,7 +39,7 @@ class TestAssignment3(unittest.TestCase):
         preferences = [['quality', 'price', 'time'], [2, 0, 1]]
         expected_output = []
 
-        output = main(self.json_tree, norm, goal, beliefs, preferences)
+        output = make_decision(self.json_tree, norm, goal, beliefs, preferences)
         try:
             self.assertEqual(output, expected_output)
             print(Fore.GREEN + "Test case 2 passed")
@@ -58,7 +58,7 @@ class TestAssignment3(unittest.TestCase):
         preferences = [['quality', 'price', 'time'], [1, 2, 0]]
         expected_output = ['getCoffee', 'getKitchenCoffee', 'getStaffCard', 'getOwnCard', 'gotoKitchen', 'getCoffeeKitchen']
 
-        output = main(self.json_tree, norm, goal, beliefs, preferences)
+        output = make_decision(self.json_tree, norm, goal, beliefs, preferences)
         try:
             self.assertEqual(output, expected_output)
             print(Fore.GREEN + "Test case 3 passed")
@@ -75,7 +75,7 @@ class TestAssignment3(unittest.TestCase):
         preferences = [['quality', 'price', 'time'], [1, 2, 0]]
 
         expected_output = []
-        output = main(self.json_tree, norm, goal, beliefs, preferences)
+        output = make_decision(self.json_tree, norm, goal, beliefs, preferences)
         try:
             self.assertEqual(output, expected_output)
             print(Fore.GREEN + "Test case 4 passed")
@@ -93,7 +93,7 @@ class TestAssignment3(unittest.TestCase):
 
         expected_output = ['getCoffee', 'getKitchenCoffee', 'getStaffCard', 'getOwnCard', 'gotoKitchen', 'getCoffeeKitchen']
 
-        output = main(self.json_tree, norm, goal, beliefs, preferences)
+        output = make_decision(self.json_tree, norm, goal, beliefs, preferences)
         try:
             self.assertEqual(output, expected_output)
             print(Fore.GREEN + "Test case 5 passed")
@@ -111,7 +111,7 @@ class TestAssignment3(unittest.TestCase):
 
         expected_output = ['getCoffee', 'getKitchenCoffee', 'getStaffCard', 'getOwnCard', 'gotoKitchen', 'getCoffeeKitchen']
 
-        output = main(self.json_tree, norm, goal, beliefs, preferences)
+        output = make_decision(self.json_tree, norm, goal, beliefs, preferences)
         try:
             self.assertEqual(output, expected_output)
             print(Fore.GREEN + "Test case 6 passed")
@@ -129,7 +129,7 @@ class TestAssignment3(unittest.TestCase):
 
         expected_output = ['getCoffee', 'getShopCoffee', 'gotoShop', 'payShop', 'getCoffeeShop']
 
-        output = main(self.json_tree, norm, goal, beliefs, preferences)
+        output = make_decision(self.json_tree, norm, goal, beliefs, preferences)
         try:
             self.assertEqual(output, expected_output)
             print(Fore.GREEN + "Test case 7 passed")
@@ -147,7 +147,7 @@ class TestAssignment3(unittest.TestCase):
 
         expected_output = []
 
-        output = main(self.json_tree, norm, goal, beliefs, preferences)
+        output = make_decision(self.json_tree, norm, goal, beliefs, preferences)
         try:
             self.assertEqual(output, expected_output)
             print(Fore.GREEN + "Test case 8 passed")
@@ -158,4 +158,4 @@ class TestAssignment3(unittest.TestCase):
             raise
 
 if __name__ == '__main__':
-    unittest.main()
+    unittest.make_decision()

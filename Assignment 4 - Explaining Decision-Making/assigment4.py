@@ -193,7 +193,7 @@ def export_tree_to_png(root, output_file):
                 nodeattrfunc=lambda node: f'label="{node.name}\nViolation: {node.violation}"'
                ).to_picture(output_file)
 
-def main(json_tree, norm, goal, beliefs, preferences, action_to_explain, output_dir=""):
+def make_decision(json_tree, norm, goal, beliefs, preferences, output_dir=""):
     """
     Main function to determine the best execution trace for the agent.
 
@@ -203,7 +203,6 @@ def main(json_tree, norm, goal, beliefs, preferences, action_to_explain, output_
     goal (list): The goal of the agent: a set of beliefs (strings) of the agent that must be true at the end of the execution of the trace.
     beliefs (list): A set of strings representing the initial beliefs of the agents.
     preferences (list): A pair describing the preference of the end-user.
-    action_to_explain (string): The name of the action to explain.
     output_dir (string): The directory to save the output image
 
     Returns:
@@ -282,6 +281,71 @@ def main(json_tree, norm, goal, beliefs, preferences, action_to_explain, output_
         print(f"Best trace: {output}")
     
     return output
+
+
+def create_explanation(key="", node_name=None, value=""):
+    """
+    Creates an explanation for a given key, node name, and value.
+
+    Parameters:
+    key (string): The key of the explanation
+    node_name (string): The name of the node
+    value (string): The value of the explanation
+
+    Returns:
+    list: A list representing the explanation
+    """
+    if node_name is None:
+        return [key, value]
+    
+    return [key, node_name, value]
+
+def add_explanation(explanations, key="", node_name=None, value=""):
+    """
+    Adds an explanation to the list of explanations.
+
+    Parameters:
+    explanations (list): The list of explanations
+    key (string): The key of the explanation
+    node_name (string): The name of the node
+    value (string): The value of the explanation
+    """
+    explanations.append(create_explanation(key, node_name, value))
+
+
+def generate_explanations(json_tree, norm, goal, beliefs, preferences, output_dir=""):
+    """
+    Explain why a certain action was executed as part of a selected execution trace
+
+    Parameters:
+    json_tree (json object): The goal tree 
+    norm (dict): The norm
+    goal (list): The goal of the agent: a set of beliefs (strings) of the agent that must be true at the end of the execution of the trace.
+    beliefs (list): A set of strings representing the initial beliefs of the agents.
+    preferences (list): A pair describing the preference of the end-user.
+    action_to_explain (string): The name of the action to explain.
+    output_dir (string): The directory to save the output image
+
+    Returns:
+    output (list): A list of strings representing the execution trace chosen by the agent.
+    """
+
+    explanations = []
+
+    """ (g) A goal ("D"). Requested format:
+        ['D', name of the goal]
+        Example: ['D', 'getKitchenCoffee']
+    """
+
+    """ (h) The user preference (”U”). Requested format:
+        ['U' the pair given in input as user preference]
+        Example: ['U', [['quality', 'price', 'time'], [1, 2, 0]]]
+    """
+    if preferences and len(preferences) == 2:
+        add_explanation(explanations, key='U', value=preferences)
+
+
+    return explanations
 
 # output =  main(json_tree, norm, goal, beliefs, preferences, action_to_explain)
 

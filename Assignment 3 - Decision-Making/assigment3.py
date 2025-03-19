@@ -179,7 +179,7 @@ def export_tree_to_png(root, output_file):
                 nodeattrfunc=lambda node: f'label="{node.name}\nViolation: {node.violation}"'
                ).to_picture(output_file)
 
-def main(json_tree, norm, goal, beliefs, preferences, output_dir=""):
+def make_decision(json_tree, norm, goal, beliefs, preferences, output_dir=""):
     """
     Main function to determine the best execution trace for the agent.
 
