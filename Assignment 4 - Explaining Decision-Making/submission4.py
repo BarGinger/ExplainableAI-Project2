@@ -1,3 +1,49 @@
+"""
+HW2.4. Practice - Assignment 4 - Explaining Decision-Making
+Write an algorithm to explain why a certain action was executed as part of a selected execution trace. The selected execution trace should be selected according to assignment 3.
+
+Please, refer to the Project description on Blackboard for all the details and instructions of the assignment.
+
+The setup code gives the following variables:
+
+Name	Type	Description
+json_tree	json object	The goal tree
+norm	dict	The norm
+goal	list	The goal of the agent: a set of beliefs (strings) of the agent that must be true at the end of the execution of the trace.
+beliefs	list	A set of strings representing the initial beliefs of the agents.
+preferences	list	A pair describing the preference of the end-user.
+action_to_explain	string	The name of the action to explain
+Your code snippet should define the following variables:
+
+Name	Type	Description
+selected_trace	list	A list of strings representing the execution trace chosen by the agent. The strings in the list are the names of the nodes in the execution trace.
+output	list	An explanation in the form of a list of lists. If the action is not in the trace, return an empty list, otherwise the explanation should contain a list of explanatory factors
+Instructions:
+A file coffee.json is provided as input for the exercise and pre-loaded for you in the variable json_tree.
+For this variant of the exercise, the variables have the following values:
+
+Variable	Value
+norm	{'type': 'P', 'actions': ['gotoKitchen']}
+goal	['haveCoffee']
+beliefs	['staffCardAvailable', 'ownCard']
+preferences	[['quality', 'price', 'time'], [1, 2, 0]]
+action_to_explain	"getOthersCard"
+After saving and grading this variant, press the New Variant button to try a different variant.
+
+Explanations format and explanatory factors: please see the detailed Project description on Blackboard.
+Given a request to explain action_to_explain from a trace 
+, the explanation is expected to be empty if action_to_explain is not part of 
+. Otherwise, it is expected that the explanation contains
+
+For each OR node,
+One "C" factor for the selected alternative for the OR node that led to action_to_explain
+An explanation for each alternative not selected, either via a "V" factor, an "N" factor, or a "F" factor explanation, depending on the reason. Note: if, for one alternative not selected, multiple reasons are true, only report the first factor, considering the order above (i.e., a "V" factor only if no "N" factor is relevant, and a "F" factor only if no "N" nor "V" factors are releant).
+For each ACT node executed before (and including) action_to_explain, one "P" factor explanation.
+For each node linked by action_to_explain (if any), one or more (based on the chain of links) "L" factor explanations.
+For each parent of action_to_explain, if it is a goal node (either OR or AND or SEQ), one "D" factor explanation
+Each explanatory factor should be represented as a list where the first element of a list is a string representing the type of factor (denoted with a letter prefix) and the rest of the list contains relevant informations for the explanatory factor, as explained in the Project description.
+"""
+
 from anytree import AnyNode
 from anytree.exporter import DotExporter
 from anytree.search import find
@@ -9,18 +55,18 @@ import numpy as np
 
 print_mode = False
 
-def find_starting_node(root, starting_node_name):
+def find_node(root, node_to_find):
     """
     Traverse the tree to find the starting node by name.
 
     Parameters:
     root (Node): The root node of the tree
-    starting_node_name (string): The name of the starting node to find
+    node_to_find (string): The name of the node to find
 
     return:
     Node: The starting node if found, otherwise None
     """
-    node = find(root, lambda node: node.name == starting_node_name)
+    node = find(root, lambda node: node.name == node_to_find)
     if print_mode:
         if node:
             print(f"Node found: {node.name}")
@@ -309,7 +355,15 @@ def get_cost_of_node(traces, costs, node):
     
     # Return the cost of the node
     return costs[node_index]
-    
+
+def add_linked_node_explanations(explanations, node, root):
+     if hasattr(node, 'link') and node.link:
+        for dest_node_name in node.link:
+            linked_node = find_node(root, dest_node_name)
+            if linked_node:
+                add_explanation(explanations, key='L', node_name=node.name, value=['->', dest_node_name])
+            if hasattr(linked_node, 'link') and node.link:
+                add_linked_node_explanations(explanations, linked_node, root)
 
 
 
@@ -347,7 +401,7 @@ def generate_explanations(json_tree, norm, goal, beliefs, preferences, action_to
 
 
     # Get target node to explain
-    target_node = find_starting_node(root, action_to_explain)
+    target_node = find_node(root, action_to_explain)
     if not target_node:
         return [], chosen_trace
 
@@ -477,14 +531,7 @@ def generate_explanations(json_tree, norm, goal, beliefs, preferences, action_to
                 a chain starting from a) to the explanation, i.e., for each link in the chain an
                 explanation in the requested format above should included in the list.
             """
-            if hasattr(node, 'link') and node.link:
-                dest_node_name = node.link
-                if isinstance(node.link, list):
-                    dest_node_name = node.link[0]
-
-                add_explanation(explanations, key='L',
-                                 node_name=current_node_name,
-                                 value=['->', dest_node_name])
+            add_linked_node_explanations(explanations, node, root)
             # Stop the traversal if the action to explain is reached
             break
 

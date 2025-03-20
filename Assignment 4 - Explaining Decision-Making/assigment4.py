@@ -55,18 +55,18 @@ import numpy as np
 
 print_mode = False
 
-def find_starting_node(root, starting_node_name):
+def find_node(root, node_to_find):
     """
     Traverse the tree to find the starting node by name.
 
     Parameters:
     root (Node): The root node of the tree
-    starting_node_name (string): The name of the starting node to find
+    node_to_find (string): The name of the node to find
 
     return:
     Node: The starting node if found, otherwise None
     """
-    node = find(root, lambda node: node.name == starting_node_name)
+    node = find(root, lambda node: node.name == node_to_find)
     if print_mode:
         if node:
             print(f"Node found: {node.name}")
@@ -355,7 +355,15 @@ def get_cost_of_node(traces, costs, node):
     
     # Return the cost of the node
     return costs[node_index]
-    
+
+def add_linked_node_explanations(explanations, node, root):
+     if hasattr(node, 'link') and node.link:
+        for dest_node_name in node.link:
+            linked_node = find_node(root, dest_node_name)
+            if linked_node:
+                add_explanation(explanations, key='L', node_name=node.name, value=['->', dest_node_name])
+            if hasattr(linked_node, 'link') and node.link:
+                add_linked_node_explanations(explanations, linked_node, root)
 
 
 
@@ -393,7 +401,7 @@ def generate_explanations(json_tree, norm, goal, beliefs, preferences, action_to
 
 
     # Get target node to explain
-    target_node = find_starting_node(root, action_to_explain)
+    target_node = find_node(root, action_to_explain)
     if not target_node:
         return [], chosen_trace
 
@@ -523,14 +531,7 @@ def generate_explanations(json_tree, norm, goal, beliefs, preferences, action_to
                 a chain starting from a) to the explanation, i.e., for each link in the chain an
                 explanation in the requested format above should included in the list.
             """
-            if hasattr(node, 'link') and node.link:
-                dest_node_name = node.link
-                if isinstance(node.link, list):
-                    dest_node_name = node.link[0]
-
-                add_explanation(explanations, key='L',
-                                 node_name=current_node_name,
-                                 value=['->', dest_node_name])
+            add_linked_node_explanations(explanations, node, root)
             # Stop the traversal if the action to explain is reached
             break
 
@@ -546,7 +547,7 @@ def generate_explanations(json_tree, norm, goal, beliefs, preferences, action_to
 
     return explanations, chosen_trace
 
-output, selected_trace =  generate_explanations(json_tree, norm, goal, beliefs, preferences, action_to_explain)
+# output, selected_trace =  generate_explanations(json_tree, norm, goal, beliefs, preferences, action_to_explain)
 
 # if __name__ == "__main__":
 #     # norm = {'type': 'P', 'actions': ['gotoKitchen']}

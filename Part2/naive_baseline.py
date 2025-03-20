@@ -138,7 +138,7 @@ def generate_naural_explentions(formal_explention, preferences):
                 explanation in the requested format above should included in the list.
             """
         linked_action = formal_explention[3]
-        return f"The action '{action}' is linked to the action '{linked_action}' as a necessary step to achieve the goal action."
+        return f"The action '{action}' is linked to the action '{linked_action}', and as such, it was executed as a necessary step to achieve the goal action."
     elif explanation_type == 'U':  # Utility Function
         """ (h) The user preference ("U"). Requested format:
         ['U' the pair given in input as user preference]
