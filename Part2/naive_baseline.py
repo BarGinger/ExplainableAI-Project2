@@ -76,6 +76,24 @@ def handle_utility_function_explanation(preferences):
         preference_labels_formatted = preference_labels_sorted[0]
     return f"The agent's preferences, in descending order of importance, are: {preference_labels_formatted}."
 
+def handle_failure_explanation(action, formal_explention):
+    """
+    (e) A failed condition of a choice ("F"). Requested format:
+        ['F', name of an alternative of an OR node that was NOT chosen because
+        (some of) its pre-conditions were not satisfied,
+        list of preconditions of the alternative that were NOT
+        satisfied and made the choice not possible]
+        Example: ['F', 'getKitchenCoffee', ['staffCardAvailable']]
+    """     
+    alternative = formal_explention[1]
+    preconditions = formal_explention[2]
+    if len(preconditions) > 1:
+        preconditions_labels_formatted = ', '.join(preconditions[:-1]) + ', and ' + preconditions[-1]
+    else:
+        preconditions_labels_formatted = preconditions[0]
+    
+    return f"The agent executed '{action}' because the preconditions for the alternative action '{alternative}', which are {preconditions_labels_formatted}, were not met."
+
 def generate_natural_explentions(formal_explention, preferences):
     """
     Generate naive baseline approach of if-else rules to generate natural language explanations
@@ -83,10 +101,6 @@ def generate_natural_explentions(formal_explention, preferences):
     :param preferences: user preferences
     :return: natural language explention
     """
-    if formal_explention is None:
-        print("No formal explention was given!")
-        return None
-    
     explanation_type = formal_explention[0]
     action = formal_explention[1]
     preferences_labels = preferences[0]
@@ -113,25 +127,43 @@ def generate_natural_explentions(formal_explention, preferences):
         return handle_link_explanation(action, formal_explention)
     elif explanation_type == 'U':  # Utility Function
         return handle_utility_function_explanation(preferences)
-
+    elif explanation_type == 'F':
+        return handle_failure_explanation(action, formal_explention)
+    
     return "Unknown explanation type."
 
-def generate_naive_baseline(formal_explentions, preferences):
+def generate_naive_baseline(formal_explentions, chosen_trace, norm, goal, beliefs, preferences, action_to_explain):
     """
     Generate naive baseline approach of if-else rules to generate natural language explanations
-    :param formal_explentions: list of formal explentions (output of part1-4)
-    :param preferences: user preferences
+    
+    Parameters:
+    formal_explentions (list): list of formal explentions (output of part1-4)
+    chosen_trace (list): chosen trace
+    norm (dict): The norm
+    goal (list): The goal of the agent: a set of beliefs (strings) of the agent that must be true at the end of the execution of the trace.
+    beliefs (list): A set of strings representing the initial beliefs of the agents.
+    preferences (list): A pair describing the preference of the end-user.
+    action_to_explain (string): The name of the action to explain.
 
     :return: list of natural language explentions
     """
     natural_explentions = []
+    if chosen_trace is not None and len(chosen_trace) > 0:
+       chosen_trace_formatted = ', '.join(chosen_trace)
+
+    if formal_explentions is None or len(formal_explentions) == 0:
+        if chosen_trace is not None:
+            return [f"The target action to explain '{action_to_explain}' was not  exectued in the chosen trace ({chosen_trace_formatted})."]
+        
+        return ["No valid execution path was found given the current restrictions."]
+
     for explention in formal_explentions:
         natural_explentions.append(generate_natural_explentions(explention, preferences))
 
     return natural_explentions
 
-sample1 = [['C', 'getAnnOfficeCoffee', ['AnnInOffice']], ['N', 'getKitchenCoffee', 'P(gotoKitchen)'], ['V', 'getAnnOfficeCoffee', [2, 0, 6], '>', 'getShopCoffee', [0, 3, 9]], ['P', 'gotoAnnOffice', ['AnnInOffice']], ['L', 'getPod', '->', 'getCoffeeAnnOffice'], ['D', 'getAnnOfficeCoffee'], ['D', 'getCoffee'], ['U', [['quality', 'price', 'time'], [2, 0, 1]]]]
-preferences = [["quality", "price", "time"], [1, 2, 0]]
-sample1_res = generate_naive_baseline(formal_explentions=sample1, preferences=preferences)
+# sample1 = [['C', 'getAnnOfficeCoffee', ['AnnInOffice']], ['N', 'getKitchenCoffee', 'P(gotoKitchen)'], ['V', 'getAnnOfficeCoffee', [2, 0, 6], '>', 'getShopCoffee', [0, 3, 9]], ['P', 'gotoAnnOffice', ['AnnInOffice']], ['L', 'getPod', '->', 'getCoffeeAnnOffice'], ['D', 'getAnnOfficeCoffee'], ['D', 'getCoffee'], ['U', [['quality', 'price', 'time'], [2, 0, 1]]]]
+# preferences = [["quality", "price", "time"], [1, 2, 0]]
+# sample1_res = generate_naive_baseline(formal_explentions=sample1, preferences=preferences)
 
-print('\n '.join(sample1_res))
+# print('\n '.join(sample1_res))
