@@ -379,8 +379,8 @@ def generate_explanations(json_tree, norm, goal, beliefs, preferences, action_to
 
     explanations = []
 
+    # Use part 3 code to get selected trace - Get the root node, the chosen trace, and the valid traces
     root, chosen_trace, valid_traces, valid_costs = make_decision(json_tree, norm, goal, beliefs, preferences, output_dir)
-
 
 
     print(f"Chosen trace: {chosen_trace}")
@@ -391,9 +391,6 @@ def generate_explanations(json_tree, norm, goal, beliefs, preferences, action_to
     else:
         print(f"Action to explain: {action_to_explain} in trace")
 
-    end_costs = None
-    if valid_costs and len(valid_costs) > 0:
-        end_costs = valid_costs[0]
 
     # Get target node to explain
     target_node = find_starting_node(root, action_to_explain)
@@ -408,7 +405,6 @@ def generate_explanations(json_tree, norm, goal, beliefs, preferences, action_to
     Starting generating the explanation, according to the pdf it should contain a list of explanatory factors as defined below.
     The list should be obtained by traversing the tree in pre-order.
     """    
-    preconditions = []
     agent_beliefs = beliefs.copy()
     for node in PreOrderIter(root):
         current_node_name = node.name
@@ -427,9 +423,7 @@ def generate_explanations(json_tree, norm, goal, beliefs, preferences, action_to
             """
             if hasattr(node, 'pre') and node.name in chosen_trace and hasattr(node, 'type') and node.type in ['ACT']:
                 # Add preconditions of cuurent action to the global preconditions list
-                preconditions.extend(node.pre)
                 add_explanation(explanations, key='P', node_name=node.name, value=[node.pre.copy()])
-                # add_explanation(explanations, key='P', node_name=node.name, value=[preconditions.copy()])
             
             # Update agent beliefs given the execution of the current node
             if hasattr(node, 'post'):
@@ -552,26 +546,26 @@ def generate_explanations(json_tree, norm, goal, beliefs, preferences, action_to
 
     return explanations, chosen_trace
 
-# output, selected_trace =  generate_explanations(json_tree, norm, goal, beliefs, preferences, action_to_explain)
+output, selected_trace =  generate_explanations(json_tree, norm, goal, beliefs, preferences, action_to_explain)
 
-if __name__ == "__main__":
-    # norm = {'type': 'P', 'actions': ['gotoKitchen']}
-    # goal = ['haveCoffee']
-    # beliefs = ['staffCardAvailable', 'ownCard']
-    # preferences = [['quality', 'price', 'time'], [1, 2, 0]]
-    # action_to_explain = "getOthersCard"
+# if __name__ == "__main__":
+#     # norm = {'type': 'P', 'actions': ['gotoKitchen']}
+#     # goal = ['haveCoffee']
+#     # beliefs = ['staffCardAvailable', 'ownCard']
+#     # preferences = [['quality', 'price', 'time'], [1, 2, 0]]
+#     # action_to_explain = "getOthersCard"
 
-    norm = {"type": "P", "actions": ["payShop"]}
-    beliefs = ["staffCardAvailable", "ownCard", "colleagueAvailable", "haveMoney", "AnnInOffice"]
-    goal = ["haveCoffee"]
-    preferences = [["quality", "price", "time"], [1, 2, 0]]
-    action_to_explain = "getCoffeeKitchen"
+#     norm = {"type": "P", "actions": ["payShop"]}
+#     beliefs = ["staffCardAvailable", "ownCard", "colleagueAvailable", "haveMoney", "AnnInOffice"]
+#     goal = ["haveCoffee"]
+#     preferences = [["quality", "price", "time"], [1, 2, 0]]
+#     action_to_explain = "getCoffeeKitchen"
 
-    current_dir = os.path.dirname(__file__)
-    # Read the JSON file into a dictionary
-    with open(f'{current_dir}/coffee.json', 'r') as file:
-        json_tree = json.load(file)
-    generate_explanations(json_tree, norm, goal, beliefs, preferences, action_to_explain, output_dir=current_dir)
+#     current_dir = os.path.dirname(__file__)
+#     # Read the JSON file into a dictionary
+#     with open(f'{current_dir}/coffee.json', 'r') as file:
+#         json_tree = json.load(file)
+#     generate_explanations(json_tree, norm, goal, beliefs, preferences, action_to_explain, output_dir=current_dir)
 
-    if print_mode:
-        print("Exercise 4 is done running!")
+#     if print_mode:
+#         print("Exercise 4 is done running!")
