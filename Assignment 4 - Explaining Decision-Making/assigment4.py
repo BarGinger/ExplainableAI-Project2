@@ -209,6 +209,8 @@ def make_decision(json_tree, norm, goal, beliefs, preferences, output_dir=""):
     Returns:
     tree (Node): The root node of the tree
     chosen_trace (list): A list of strings representing the execution trace chosen by the agent.
+    valid_traces (list): A list of all valid traces
+    valid_costs (list): A list of the cost of each valid trace
     """
     # Build the tree from the JSON object
     root = build_tree(json_tree)
@@ -282,7 +284,7 @@ def make_decision(json_tree, norm, goal, beliefs, preferences, output_dir=""):
     if print_mode:
         print(f"Best trace: {chosen_trace}")
     
-    return root, chosen_trace
+    return root, chosen_trace, valid_traces, valid_costs
 
 
 def create_explanation(key="", node_name=None, value=[]):
@@ -292,15 +294,27 @@ def create_explanation(key="", node_name=None, value=[]):
     Parameters:
     key (string): The key of the explanation
     node_name (string): The name of the node
-    value (string): The value of the explanation
+    value (list): The value of the explanation
 
     Returns:
     list: A list representing the explanation
     """
+    # Convert each element in the value list to a string, including arrays
+    # formatted_value = []
+    # if key not in ['U']:
+    #     for v in value:
+    #         if isinstance(v, list):
+    #             formatted_value.append(v)
+    #         else:
+    #             formatted_value.append(str(v))
+    # else:
+    #     formatted_value = value
+
     if node_name is None:
         return [key] + value
     
     return [key, node_name] + value
+
 
 def add_explanation(explanations, key="", node_name=None, value=[]):
     """
@@ -314,43 +328,33 @@ def add_explanation(explanations, key="", node_name=None, value=[]):
     """
     explanations.append(create_explanation(key, node_name, value))
 
-def get_cost_of_node(node):
+def get_cost_of_node(traces, costs, node):
     """
     Calculate the cost of a given node.
 
     Parameters:
+    traces (list): A list of all possible traces
+    costs (list): A list of the cost of each trace
     node (Node): The node for which to calculate the cost
 
     Returns:
     list: The cost of the node
     """
+    if not traces or not costs or not node:
+        return []
+    
     if hasattr(node, 'costs'):
         return node.costs
 
-    # If the node has no children, it is a leaf node (ACT), return its cost
-    if not hasattr(node, 'children') or not node.children:
+    # Find the index of the node in the traces
+    node_index = next((i for i, trace in enumerate(traces) if node.name in trace), None)
+
+    # If the node is not found in the traces, return an empty list
+    if node_index is None:
         return []
-
-    costs = []
-
-    if node.type == "OR":
-        # OR node: Select the minimum cost among children
-        for child in node.children:
-            child_cost = get_cost_of_node(child)
-            if not costs or (child_cost and sum(child_cost) < sum(costs)):
-                costs = child_cost
-
-    elif node.type == "SEQ" or node.type == "AND":
-        # SEQ/AND node: Sum the costs of all children
-        for child in node.children:
-            child_cost = get_cost_of_node(child)
-            if child_cost:
-                if not costs:
-                    costs = child_cost
-                else:
-                    costs = [x + y for x, y in zip(costs, child_cost)]
-
-    return costs
+    
+    # Return the cost of the node
+    return costs[node_index]
     
 
 
@@ -370,20 +374,35 @@ def generate_explanations(json_tree, norm, goal, beliefs, preferences, action_to
 
     Returns:
     output (list): A list of strings representing the execution trace chosen by the agent.
+    chosen_trace (list): A list of strings representing the execution trace chosen by the agent.
     """
 
     explanations = []
 
-    root, chosen_trace = make_decision(json_tree, norm, goal, beliefs, preferences, output_dir)
+    root, chosen_trace, valid_traces, valid_costs = make_decision(json_tree, norm, goal, beliefs, preferences, output_dir)
+
+
 
     print(f"Chosen trace: {chosen_trace}")
-    if action_to_explain not in chosen_trace:
+    if not chosen_trace or len(chosen_trace) == 0 or action_to_explain not in chosen_trace:
         print(f"Action to explain: {action_to_explain} not in trace")
         # If the action is not in the trace, return an empty list
-        return []
+        return [], chosen_trace
     else:
         print(f"Action to explain: {action_to_explain} in trace")
 
+    end_costs = None
+    if valid_costs and len(valid_costs) > 0:
+        end_costs = valid_costs[0]
+
+    # Get target node to explain
+    target_node = find_starting_node(root, action_to_explain)
+    if not target_node:
+        return [], chosen_trace
+
+    if hasattr(target_node, 'ancestors'):
+        ancestor_names = [ancestor.name for ancestor in target_node.ancestors]
+        print(f"Ancestor names: {ancestor_names}")
 
     """
     Starting generating the explanation, according to the pdf it should contain a list of explanatory factors as defined below.
@@ -406,10 +425,11 @@ def generate_explanations(json_tree, norm, goal, beliefs, preferences, action_to
                 Example: ['P', 'getOwnCard', ['ownCard']]
                 Note: No "P" factor should be included in the list if an action has no preconditions.
             """
-            if hasattr(node, 'pre') and node.name in chosen_trace:
+            if hasattr(node, 'pre') and node.name in chosen_trace and hasattr(node, 'type') and node.type in ['ACT']:
                 # Add preconditions of cuurent action to the global preconditions list
                 preconditions.extend(node.pre)
-                add_explanation(explanations, key='P', node_name=node.name, value=[preconditions.copy()])
+                add_explanation(explanations, key='P', node_name=node.name, value=[node.pre.copy()])
+                # add_explanation(explanations, key='P', node_name=node.name, value=[preconditions.copy()])
             
             # Update agent beliefs given the execution of the current node
             if hasattr(node, 'post'):
@@ -418,6 +438,7 @@ def generate_explanations(json_tree, norm, goal, beliefs, preferences, action_to
             # Handle OR nodes (b, c, d, e explanations [C, V, N, F])
             if current_node_type == 'OR':
                 chosen_child = next(child for child in node.children if child.name in chosen_trace)
+                chosen_child_name = chosen_child.name
                 for child in node.children:
                     child_name = child.name
                     if child_name in chosen_trace:
@@ -468,12 +489,13 @@ def generate_explanations(json_tree, norm, goal, beliefs, preferences, action_to
                             unsatisfied_preconditions = [pre for pre in child.pre if pre not in agent_beliefs]             
 
                         if len(unsatisfied_preconditions) == 0:
-                            child_cost = get_cost_of_node(child)
-                            chosen_child_cost = get_cost_of_node(chosen_child)
-
+                            chosen_child_cost = get_cost_of_node(valid_traces, valid_costs, chosen_child)                            
+                            child_cost = get_cost_of_node(valid_traces, valid_costs, child)
+                            child_cost_formatted = child_cost.tolist() if isinstance(child_cost, np.ndarray) else child_cost
+                            chosen_child_cost_formatted = chosen_child_cost.tolist() if isinstance(chosen_child_cost, np.ndarray) else chosen_child_cost
                             add_explanation(explanations, key='V', 
-                                            node_name=child_name, 
-                                            value=[chosen_child.name, chosen_child_cost, '>',child_name, child_cost])
+                                            node_name=chosen_child_name, 
+                                            value=[chosen_child_cost_formatted, '>',child_name, child_cost_formatted])
                             continue
                         
 
@@ -492,7 +514,7 @@ def generate_explanations(json_tree, norm, goal, beliefs, preferences, action_to
                 ['D', name of the goal]
                 Example: ['D', 'getKitchenCoffee']
             """
-            if current_node_type in ['SEQ', 'AND', 'OR']:
+            if current_node_type in ['SEQ', 'AND', 'OR'] and ancestor_names and len(ancestor_names) > 0 and current_node_name in ancestor_names:
                 add_explanation(explanations, key='D', value=[current_node_name])
 
         # Check if the current node is the action to explain
@@ -507,11 +529,14 @@ def generate_explanations(json_tree, norm, goal, beliefs, preferences, action_to
                 a chain starting from a) to the explanation, i.e., for each link in the chain an
                 explanation in the requested format above should included in the list.
             """
-            if hasattr(node, 'link'):
+            if hasattr(node, 'link') and node.link:
                 dest_node_name = node.link
+                if isinstance(node.link, list):
+                    dest_node_name = node.link[0]
+
                 add_explanation(explanations, key='L',
                                  node_name=current_node_name,
-                                 value=[current_node_name, '->', dest_node_name])
+                                 value=['->', dest_node_name])
             # Stop the traversal if the action to explain is reached
             break
 
@@ -525,9 +550,9 @@ def generate_explanations(json_tree, norm, goal, beliefs, preferences, action_to
         add_explanation(explanations, key='U', value=[preferences])
 
 
-    return explanations
+    return explanations, chosen_trace
 
-# output =  main(json_tree, norm, goal, beliefs, preferences, action_to_explain)
+# output, selected_trace =  generate_explanations(json_tree, norm, goal, beliefs, preferences, action_to_explain)
 
 if __name__ == "__main__":
     # norm = {'type': 'P', 'actions': ['gotoKitchen']}
