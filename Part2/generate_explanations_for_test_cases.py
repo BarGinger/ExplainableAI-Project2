@@ -15,7 +15,7 @@ def generate_explanations_for_inputs(test_cases):
     :return: dictionary containing the explanations for each test case
     """
     current_dir = os.path.dirname(__file__)
-    explanations_dir = os.path.join(current_dir, "explanations")
+    explanations_dir = os.path.join(current_dir, "explanations", "baseline")
     os.makedirs(explanations_dir, exist_ok=True)
     
     explanations = {}
@@ -36,6 +36,14 @@ def generate_explanations_for_inputs(test_cases):
     return explanations
 
 if __name__ == '__main__':
+    current_dir = os.path.dirname(__file__)
+    explanations_dir_baseline = os.path.join(current_dir, "explanations", "baseline")
+    os.makedirs(explanations_dir_baseline, exist_ok=True)
+    explanations_dir_t5 = os.path.join(current_dir, "explanations", "T5")
+    os.makedirs(explanations_dir_t5, exist_ok=True)
+
+
+
     test_cases = [
         {
             "name_json_tree_file": "coffee.json",
