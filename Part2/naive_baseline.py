@@ -70,10 +70,7 @@ def handle_utility_function_explanation(preferences):
     preferences_values = preferences[1]
     # Sort preferences_labels according to preferences_values
     preference_labels_sorted = [preferences_labels[i] for i in preferences_values]
-    if len(preference_labels_sorted) > 1:
-        preference_labels_formatted = ', '.join(preference_labels_sorted[:-1]) + ', and ' + preference_labels_sorted[-1]
-    else:
-        preference_labels_formatted = preference_labels_sorted[0]
+    preference_labels_formatted = format_list_to_string(preference_labels_sorted)
     return f"The agent's preferences, in descending order of importance, are: {preference_labels_formatted}."
 
 def handle_failure_explanation(action, formal_explention):
@@ -87,10 +84,7 @@ def handle_failure_explanation(action, formal_explention):
     """     
     alternative = formal_explention[1]
     preconditions = formal_explention[2]
-    if len(preconditions) > 1:
-        preconditions_labels_formatted = ', '.join(preconditions[:-1]) + ', and ' + preconditions[-1]
-    else:
-        preconditions_labels_formatted = preconditions[0]
+    preconditions_labels_formatted = format_list_to_string(preconditions)
     
     return f"The agent executed '{action}' because the preconditions for the alternative action '{alternative}', which are {preconditions_labels_formatted}, were not met."
 
@@ -107,10 +101,7 @@ def generate_natural_explentions(formal_explention, preferences):
     preferences_values = preferences[1]
     # Sort preferences_labels according to preferences_values
     preference_labels_sorted = [preferences_labels[i] for i in preferences_values]
-    if len(preference_labels_sorted) > 1:
-        preference_labels_formatted = ', '.join(preference_labels_sorted[:-1]) + ', and ' + preference_labels_sorted[-1]
-    else:
-        preference_labels_formatted = preference_labels_sorted[0]
+    preference_labels_formatted = format_list_to_string(preference_labels_sorted)
 
     if explanation_type == 'C':  # Condition
         return handle_condition_explanation(action, formal_explention)
@@ -132,6 +123,62 @@ def generate_natural_explentions(formal_explention, preferences):
     
     return "Unknown explanation type."
 
+def format_list_to_string(lst):
+    """
+    Format a list of strings into a single string with commas and 'and' before the last element.
+    :param lst: The list of strings to format.
+    :return: The formatted string.
+    """
+
+    if len(lst) > 1:
+        return ', '.join(lst[:-1]) + ', and ' + lst[-1]
+    return lst[0]
+
+def generate_restriction_description(norm, goal, beliefs, preferences, action_to_explain):
+    """
+    Generate a natural language description of the restrictions placed on the agent.
+    
+    Parameters:
+    norm (dict): The norm restricting or obligating actions.
+    goal (list): The desired outcome, represented as a set of beliefs that must be true by the end of execution.
+    beliefs (list): The agent's initial knowledge.
+    preferences (list): A pair describing the end-user's priority order.
+    action_to_explain (string): The action being analyzed.
+    
+    :return: A natural language description of the restrictions.
+    """
+
+    restrictions = []
+
+    # Describe norm
+    if norm:
+        norm_type = norm.get("type", "Unknown")
+        norm_actions = norm.get("actions", [])
+
+        if norm_actions:
+            norm_action_str = format_list_to_string(norm_actions)
+            if norm_type == "P":
+                restrictions.append(f"Restricted actions: {norm_action_str}.")
+            elif norm_type == "O":
+                restrictions.append(f"Required actions: {norm_action_str}.")
+
+    # Describe initial beliefs
+    if beliefs:
+        restrictions.append(f"Starting beliefs: {format_list_to_string(beliefs)}.")
+
+    # Describe goal
+    if goal:
+        restrictions.append(f"Goal: {format_list_to_string(goal)}.")
+
+    # Describe preferences
+    preferences_description = handle_utility_function_explanation(preferences)
+    restrictions.append(preferences_description)
+
+    # Combine everything into a natural flow
+    restriction_sentence = " ".join(restrictions)
+    return f"To explain the action '{action_to_explain}', consider the following context: {restriction_sentence}"
+
+
 def generate_naive_baseline(formal_explentions, chosen_trace, norm, goal, beliefs, preferences, action_to_explain):
     """
     Generate naive baseline approach of if-else rules to generate natural language explanations
@@ -148,15 +195,26 @@ def generate_naive_baseline(formal_explentions, chosen_trace, norm, goal, belief
     :return: list of natural language explentions
     """
     natural_explentions = []
+    # Format the chosen trace for display
+    chosen_trace_formatted = ""
     if chosen_trace is not None and len(chosen_trace) > 0:
-       chosen_trace_formatted = ', '.join(chosen_trace)
+       chosen_trace_formatted = format_list_to_string(chosen_trace)
+
+    restriction_description = generate_restriction_description(norm, goal, beliefs, preferences, action_to_explain)
+    natural_explentions.append(restriction_description)
 
     if formal_explentions is None or len(formal_explentions) == 0:
-        if chosen_trace is not None:
-            return [f"The target action to explain '{action_to_explain}' was not  exectued in the chosen trace ({chosen_trace_formatted})."]
-        
-        return ["No valid execution path was found given the current restrictions."]
+        if chosen_trace:
+            natural_explentions.append(
+                f"The action '{action_to_explain}' was not executed in the chosen trace ({chosen_trace_formatted})."
+            )
 
+        if norm and norm.get("type") == "P" and action_to_explain in norm.get("actions", []):
+            natural_explentions.append("This action is restricted by the norm and therefore could not be executed.")
+
+        return natural_explentions
+
+    # Generate natural language explanations for each formal explanation
     for explention in formal_explentions:
         natural_explentions.append(generate_natural_explentions(explention, preferences))
 
