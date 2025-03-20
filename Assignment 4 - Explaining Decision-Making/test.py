@@ -110,5 +110,19 @@ class TestAssignment3(unittest.TestCase):
         output, selected_trace = generate_explanations(self.json_tree, norm, goal, beliefs, preferences, action_to_explain)
         self.compare_outputs(output, expected_output, 4)
 
+
+    def test_case_5(self):
+        norm = {'type': 'P', 'actions': ['gotoKitchen']}
+        goal = ['haveCoffee']
+        beliefs = ['staffCardAvailable', 'ownCard', 'colleagueAvailable', 'haveMoney', 'AnnInOffice']
+        preferences = [['quality', 'price', 'time'], [2, 0, 1]]
+        action_to_explain = "getPod"
+        expected_output = [['C', 'getAnnOfficeCoffee', ['AnnInOffice']], ['N', 'getKitchenCoffee', 'P(gotoKitchen)'], ['V', 'getAnnOfficeCoffee', [2, 0, 6], '>', 'getShopCoffee', [0, 3, 9]], ['P', 'gotoAnnOffice', ['AnnInOffice']], ['L', 'getPod', '->', 'getCoffeeAnnOffice'], ['D', 'getAnnOfficeCoffee'], ['D', 'getCoffee'], ['U', [['quality', 'price', 'time'], [2, 0, 1]]]]
+
+        output, selected_trace = generate_explanations(self.json_tree, norm, goal, beliefs, preferences, action_to_explain)
+        self.compare_outputs(output, expected_output, 5)
+
+
+
 if __name__ == '__main__':
     unittest.main()
