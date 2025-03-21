@@ -299,16 +299,6 @@ def create_explanation(key="", node_name=None, value=[]):
     Returns:
     list: A list representing the explanation
     """
-    # Convert each element in the value list to a string, including arrays
-    # formatted_value = []
-    # if key not in ['U']:
-    #     for v in value:
-    #         if isinstance(v, list):
-    #             formatted_value.append(v)
-    #         else:
-    #             formatted_value.append(str(v))
-    # else:
-    #     formatted_value = value
 
     if node_name is None:
         return [key] + value
@@ -548,25 +538,3 @@ def generate_formal_explanations(json_tree, norm, goal, beliefs, preferences, ac
     return explanations, chosen_trace
 
 # output, selected_trace =  generate_explanations(json_tree, norm, goal, beliefs, preferences, action_to_explain)
-
-# if __name__ == "__main__":
-#     # norm = {'type': 'P', 'actions': ['gotoKitchen']}
-#     # goal = ['haveCoffee']
-#     # beliefs = ['staffCardAvailable', 'ownCard']
-#     # preferences = [['quality', 'price', 'time'], [1, 2, 0]]
-#     # action_to_explain = "getOthersCard"
-
-#     norm = {"type": "P", "actions": ["payShop"]}
-#     beliefs = ["staffCardAvailable", "ownCard", "colleagueAvailable", "haveMoney", "AnnInOffice"]
-#     goal = ["haveCoffee"]
-#     preferences = [["quality", "price", "time"], [1, 2, 0]]
-#     action_to_explain = "getCoffeeKitchen"
-
-#     current_dir = os.path.dirname(__file__)
-#     # Read the JSON file into a dictionary
-#     with open(f'{current_dir}/coffee.json', 'r') as file:
-#         json_tree = json.load(file)
-#     generate_explanations(json_tree, norm, goal, beliefs, preferences, action_to_explain, output_dir=current_dir)
-
-#     if print_mode:
-#         print("Exercise 4 is done running!")

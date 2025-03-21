@@ -1,3 +1,4 @@
+To explain the action 'getCoffeeKitchen', consider the following context: Starting beliefs: staffCardAvailable, and ownCard. Goal: haveCoffee. The agent's preferences, in descending order of importance, are: quality, price, and time.
 The agent was able to perform the action 'getKitchenCoffee' as all its preconditions (staffCardAvailable) were successfully met.
 The agent executed 'getAnnOfficeCoffee' because the preconditions for the alternative action 'getAnnOfficeCoffee', which are AnnInOffice, were not met.
 The agent executed 'getShopCoffee' because the preconditions for the alternative action 'getShopCoffee', which are haveMoney, were not met.
