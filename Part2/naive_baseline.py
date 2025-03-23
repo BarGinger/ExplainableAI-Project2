@@ -86,7 +86,7 @@ def handle_failure_explanation(action, formal_explention):
     preconditions = formal_explention[2]
     preconditions_labels_formatted = format_list_to_string(preconditions)
     
-    return f"The agent cound not executed '{action}' because the preconditions for it, which are {preconditions_labels_formatted}, were not met."
+    return f"The agent cound not executed '{action}' because of the preconditions for it, which are {preconditions_labels_formatted}, were not met."
 
 def generate_natural_explentions(formal_explention, preferences):
     """

@@ -1,5 +1,5 @@
 To explain the action 'getCoffeeShop', consider the following context: Starting beliefs: haveMoney, and AnnInOffice. Goal: haveCoffee. The agent's preferences, in descending order of importance, are: quality, price, and time.
-The agent cound not executed 'getKitchenCoffee' because the preconditions for it, which are staffCardAvailable, were not met.
+The agent cound not executed 'getKitchenCoffee' because of the preconditions for it, which are staffCardAvailable, were not met.
 The agent chose 'getShopCoffee' over 'getAnnOfficeCoffee' based on the user's preferences to prioritize quality, price, and time and given that 'getShopCoffee' has these values: quality: 0.0, price: 3.0, time: 9.0, while 'getAnnOfficeCoffee' has: quality: 2.0, price: 0.0, time: 6.0. The decisive factor was the quality, as 'getAnnOfficeCoffee' had a higher value of 2.0 compared to 'getShopCoffee' with 0.0. Lower values are more desirable, so 'getShopCoffee' was chosen.
 The agent was able to perform the action 'getShopCoffee' as all its preconditions (haveMoney) were successfully met.
 The agent chose to perform 'getCoffee' as it is a necessary step to achieve the goal action.

@@ -1,6 +1,6 @@
 To explain the action 'gotoKitchen', consider the following context: Restricted actions: payShop. Starting beliefs: staffCardAvailable, ownCard, colleagueAvailable, and haveMoney. Goal: haveCoffee. The agent's preferences, in descending order of importance, are: price, time, and quality.
 The agent was able to perform the action 'getKitchenCoffee' as all its preconditions (staffCardAvailable) were successfully met.
-The agent cound not executed 'getAnnOfficeCoffee' because the preconditions for it, which are AnnInOffice, were not met.
+The agent cound not executed 'getAnnOfficeCoffee' because of the preconditions for it, which are AnnInOffice, were not met.
 The action 'getShopCoffee' is not allowed because it leads to the execution of a prohibited action. The prohibition norm specifies that the following action must not be performed: payShop.
 The agent chose to perform 'getCoffee' as it is a necessary step to achieve the goal action.
 The agent chose to perform 'getKitchenCoffee' as it is a necessary step to achieve the goal action.
