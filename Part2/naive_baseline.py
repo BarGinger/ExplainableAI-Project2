@@ -82,11 +82,11 @@ def handle_failure_explanation(action, formal_explention):
         satisfied and made the choice not possible]
         Example: ['F', 'getKitchenCoffee', ['staffCardAvailable']]
     """     
-    alternative = formal_explention[1]
+    # action = formal_explention[1]
     preconditions = formal_explention[2]
     preconditions_labels_formatted = format_list_to_string(preconditions)
     
-    return f"The agent executed '{action}' because the preconditions for the alternative action '{alternative}', which are {preconditions_labels_formatted}, were not met."
+    return f"The agent cound not executed '{action}' because the preconditions for it, which are {preconditions_labels_formatted}, were not met."
 
 def generate_natural_explentions(formal_explention, preferences):
     """
