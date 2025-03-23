@@ -1,11 +1,16 @@
- In our scenario, the goal was simple - to have a cup of coffee. The agent had two cards at its disposal: a staff card and a personal one. With these tools and the drive for quality, price, and convenience in mind, let's trace the steps our agent took to achieve its aim.
+ In our scenario, the AI was tasked with getting coffee for itself, considering quality, price, and time as its preferences. It didn't have any restrictions (or norms) regarding this action. Initially, it had two beliefs: it knew it had a staff card and that it also possessed an own card.
 
-   Initially, the agent considered several paths to get the desired coffee. It started with the most obvious choice - getting coffee from the kitchen. However, this required a staff card, which the agent didn't have at that moment. So, it moved on to other options.
+   To start, the AI considered multiple paths to achieve its goal of having coffee. It first thought about getting kitchen coffee because it was aware that it had the necessary staff card. However, there were other options it looked into as well. One of them was getting coffee from Ann's office, but it couldn't do this since Ann wasn't currently in her office at the moment. Another option was purchasing coffee from a shop, but it didn't have enough money at that time.
 
-   The agent considered going to Anne's office, where she often keeps coffee. But, as she wasn't in her office at that time, this path was temporarily blocked. Another possibility was heading to the shop, but since the agent didn't have enough money, this option was not viable either.
+   The AI then decided to focus on getting the actual coffee by first choosing the path of getting kitchen coffee again, since it had the staff card available and this seemed like a viable option. It then realized it needed both a staff card and its own card in order to get kitchen coffee. So, it proceeded to get its own card as it was already in possession of one.
 
-   At this point, the agent revisited its initial idea - getting coffee from the kitchen. It realized it could first get the staff card from one of the colleagues if available or use its own card instead. The agent then managed to get its own card, as it always carries it. However, this didn't help with the kitchen option yet, as it still lacked a staff card.
+   Next, it tried to get coffee from colleagues but couldn't since they were not available at the moment. At this point, it realized that it needed to either obtain a staff card from someone else or go to the kitchen using its own card. Since going to the kitchen was necessary for both options, the AI decided to first move towards the kitchen, ensuring it had its own card with it.
 
-   Determined not to give up, the agent tried to get a staff card from a colleague, but there was none available at that moment. It then recalled that having either a staff or personal card would suffice to get coffee from the kitchen. So, it decided to use its own card and headed towards the kitchen.
+   Upon reaching the kitchen, it attempted to get coffee again, but this time with its own card. This action (getCoffeeKitchen) was successful since it had both the necessary items: a card and was physically present at the kitchen.
 
-   Finally, with the necessary card in hand and being present at the kitchen, the agent executed the 'getCoffeeKitchen' action, successfully achieving its goal of having a cup of coffee. Throughout this process, the agent prioritized quality, price, and time, carefully weighing each decision based on these preferences.
+   In summary, the AI's decision-making process can be broken down into several steps:
+   1. Identify multiple paths to achieve its goal of getting coffee
+   2. Evaluate each path systematically based on preconditions and preferences
+   3. Choose the path with the least obstacles, in this case getting kitchen coffee with a staff card
+   4. Gather any missing resources required for the chosen path (in this case, its own card)
+   5. Proceed to execute the chosen action (getCoffeeKitchen), which was successful.
