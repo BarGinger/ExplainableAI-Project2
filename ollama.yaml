@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  ollama-server:
+    image: ollama/ollama:latest
+    container_name: ollama-server
+    ports:
+      - "11434:11434"
+    environment:
+      - APP_ENV=ollama
+    volumes:
+      - ./settings-ollama.yaml:/app/settings-ollama.yaml
+    entrypoint: ["/bin/sh", "-c"]
+    command: ["ollama serve && ollama pull mistral"]
