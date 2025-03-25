@@ -1,0 +1,11 @@
+Hey there! So, I've been asked to explain my decision-making process for a task called `getCoffeeShop`. You know how sometimes we need a cup of coffee to get going? Well, that's what this task is all about.
+
+So, let me take you through the whole thought process. To start with, I had some initial beliefs. For instance, I knew that Ann was in the office, which might have an impact on my decision later on. I also assumed that I had enough money to get a cup of coffee.
+
+My main goal was to have a cup of coffee, plain and simple. Now, you might be wondering what kind of coffee I'm talking about. Well, for me, it's all about the quality, price, and time. I mean, who wants to spend too much or wait ages just to get their hands on a decent cuppa? Not me!
+
+Now, let's talk about my path. I didn't take the most straightforward route, though. I considered a few different options, like getting coffee from my own kitchen, or maybe even Ann's office. But then I thought, why not go all out and get it from a shop? That way, I can have a treat and maybe even grab something else while I'm at it.
+
+One of the first decisions I had to make was whether to head to the shop directly or stop off somewhere along the way. In the end, I decided to go for `getShopCoffee` because I wanted that extra bit of excitement and variety. And let me tell you, it paid off! Not only did I get my coffee, but I also grabbed a snack on the way and ran into some friends.
+
+So, there you have it – my thought process from start to finish. It's not always easy making decisions, but sometimes taking that extra step or considering different options can really make all the difference. And hey, now I've got my cup of coffee in hand, I'm ready to take on the day!

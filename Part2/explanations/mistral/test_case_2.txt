@@ -1,11 +1,18 @@
- Hello there! I'm an assistant designed to help you find your perfect cup of coffee. Let me explain how I chose the best option for you, based on your preferences and the available options.
+**Scenario Name:** Morning Coffee Routine
 
-   Initially, I considered multiple ways to get you a fresh cup of coffee. One of the options was 'getKitchenCoffee', but I needed your staff card to access the kitchen. Since you provided your staff card, it became possible for me to choose this option ('P', 'getKitchenCoffee', ['staffCardAvailable']).
+I performed 'getCoffeeKitchen' in the Morning Coffee Routine. Here's why.
 
-   However, since 'getKitchenCoffee' wasn't the only option available, I had to make a choice between different possibilities. The other options were 'getAnnOfficeCoffee' and 'getShopCoffee'. Since you wanted good quality coffee at an affordable price, I considered this when making my choice ('U', [['quality', 'price'], [1, 0]]).
+**Path Taken:**
+To achieve my goal, I followed this approach: get my own card, go to the kitchen, and then get coffee from the kitchen.
 
-   In the end, I chose 'getKitchenCoffee' because it was more cost-effective compared to 'getAnnOfficeCoffee' ('V', 'getKitchenCoffee', [5.0, 3.0], '>', 'getAnnOfficeCoffee', [6.0, 2.0]) and because it didn't require me to pay anything upfront ('F', 'getShopCoffee', ['P(payShop)']).
+**Context:**
+In this scenario, my initial beliefs were that staff cards are available and I have my own card. The goal was for me to have coffee, with preferences for quality, price, and time in descending order of importance. As a user, you value having your coffee quickly without compromising on its taste and affordability.
 
-   To get the coffee from the kitchen, I needed to brew it myself ('P', 'brewCoffee', []). This step was dependent on choosing 'getKitchenCoffee' ('L', 'brewCoffee', '->', 'getKitchenCoffee'). Once the coffee was brewed, I would have accomplished your goal ('D', 'getKitchenCoffee').
+**Reasoning:**
+I considered different ways to reach my goal. Initially, I thought about getting coffee from the office or shop, but these options were not viable due to the preconditions that weren't met (staff card availability for the office and having money for the shop).
 
-   Hope this explanation helps you understand how I chose the best option for your perfect cup of coffee! Enjoy your brew!
+However, I realized that having my own card would allow me to access the kitchen, where I could get high-quality coffee quickly. This path was more efficient and aligned with your preferences.
+
+I chose to perform 'getCoffeeKitchen' because it offered a better compromise between quality, price, and time. By getting my own card and then going to the kitchen, I ensured that I would have access to good-tasting coffee without overspending or wasting too much time.
+
+That's why I performed 'getCoffeeKitchen'.

@@ -1,0 +1,11 @@
+Hey there! So, I wanted to walk you through my thought process when deciding what to do. You know how sometimes we need a coffee fix? Well, that was the case here. My goal was simply to get some coffee.
+
+To start with, I had two initial beliefs: staff cards were available and so were my own cards. That's important because it gives me options for getting into restricted areas. Nothing too exciting there, but it sets the stage.
+
+Now, let's talk about my preferences. You know how sometimes you prioritize one thing over another? Well, in this case, I was considering quality, price, and time – all with their own costs attached. I mean, we've all been there: wanting a great cup of coffee quickly and affordably. So, those were the factors that weighed on my decision.
+
+When it came down to it, I decided not to take the straightforward approach and head to the kitchen myself. I knew that was an option, but I wanted to explore others first. So, I started by considering getting a coffee from... well, everywhere! I looked at all the usual spots: the staff card office, my own office, even the pod or shop.
+
+In the end, though, I decided to take the most direct route and go straight to the kitchen. And that's where things got interesting. You see, I realized that getting coffee from the kitchen wasn't just about grabbing a cup; it was also about using my staff card or own card – or maybe even combining both! That's when I stumbled upon the perfect solution: get the coffee and head to the kitchen all at once.
+
+So, there you have it. That's how I decided to perform 'getCoffeeKitchen'. It wasn't a complicated process, but it did involve considering my initial beliefs, preferences, and options. And in the end, I found the most efficient and effective way to get my coffee fix.

@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  ollama:
+    build: .
+    image: ollama/ollama:latest
+    container_name: ollama-custom
+    ports:
+      - "11434:11434"  # Expose Ollama API
+    volumes:
+      - ollama_data:/root/.ollama  # Persist model data
+
+volumes:
+  ollama_data:
