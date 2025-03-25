@@ -1,15 +1,11 @@
-Hey there! So, I'm happy to walk you through my decision-making process for the 'getCoffeeKitchen' action. Now, before we dive in, let me just say that this whole process was all about getting my caffeine fix while also being mindful of some important constraints and goals.
+Hey there! So, let's talk about why I chose to get coffee from the kitchen. You know how sometimes you just need a pick-me-up in the middle of the day? Well, for me, it all started with my initial beliefs. I began by assuming that I had access to my own card and that staff cards were available too.
 
-So, initially, I started with these beliefs: staffCardAvailable and ownCard. Now, you might be wondering what those mean. Well, basically, they're just statements about whether or not I had access to certain cards that would affect my coffee-hunting adventure. And yes, having those cards available was crucial for me to make the most of my caffeine quest.
+Now, my goal was clear: I wanted to have coffee! And let's be real, who doesn't love a good cuppa in the kitchen? As I started thinking about how to get there, I considered a few options. I could've gotten a coffee from Anna's office or even from the shop down the street, but neither of those seemed like the best choice at the time.
 
-Now, let's talk goals. My primary goal was to 'haveCoffee', plain and simple. I mean, who doesn't love a good cuppa? But what's really important here is that this goal guided all my subsequent decisions. So, when it came down to choosing between different actions, I always kept this goal in mind.
+You see, I was all about quality and price back then. I wanted my coffee to be top-notch, and I was willing to pay a bit more for it. The thought of getting coffee from Anna's office didn't seem right because, let's face it, she can be a bit particular sometimes. And as for the shop, well, their coffee just wasn't up to par in my opinion.
 
-Now, let's get to the juicy part – the path I took! Essentially, I chose to 'getCoffeeKitchen'. Now, you might be thinking, "Wait, isn't that just a combination of two other actions?" And you're right! It is. But here's the thing: those two actions, 'getCoffee' and 'getKitchenCoffee', were actually part of my preferred sequence.
+So, with those options ruled out, I decided to head to the kitchen instead. It was the best choice for me at that moment, and I'm glad I made that decision. After all, there's nothing like a freshly brewed cup of coffee in your own kitchen to brighten up your day!
 
-Now, let me tell you why I chose this path. You see, having access to staff cards was super important for getting a good cup of coffee in the kitchen. And since I had that card available, it made perfect sense to head to the kitchen and get my caffeine fix there. Plus, considering my preferences – quality, price, and time – going to the kitchen just seemed like the most sensible choice.
+That's my story, friend! It's all about making choices based on our initial beliefs, goals, norms, restrictions, and preferences. And let me tell you, it's not always easy, but sometimes the best decisions are the ones that feel the most natural.
 
-Of course, I did consider other options along the way. For instance, I could have gone for 'getStaffCard' or even 'getOwnCard'. But since those actions didn't really align with my goal of getting coffee in the kitchen, I decided to skip them.
-
-Now, let's talk norms and restrictions. In this case, there weren't any real restrictions that would've prohibited me from taking certain actions. However, if there were any, I'd have definitely taken those into account when making my decisions. And as for norms – well, since no one really expects you to follow any specific rules for getting coffee in the kitchen, I just focused on achieving my goal.
-
-So, that's it! That's my thought process for 'getCoffeeKitchen'. It was all about balancing my initial beliefs, goals, and preferences to get the best possible outcome. And in this case, that meant heading to the kitchen for a delicious cup of coffee.
+Now, go ahead and grab a cup of coffee (or tea, or whatever your heart desires)!
