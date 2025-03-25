@@ -2,7 +2,9 @@
 FROM ollama/ollama as base
 
 # Copy your Modelfile into the container
-COPY Modelfile /Modelfile
+COPY ModelfileLlama3 /ModelfileLlama3
+COPY ModelFileMistral /ModelFileMistral
+
 
 # Copy the entrypoint script into the container
 COPY entrypoint.sh /entrypoint.sh

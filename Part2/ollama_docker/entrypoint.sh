@@ -8,7 +8,11 @@ sleep 10
 
 # Pull the base model and create a new custom model
 ollama pull llama3
-ollama create custom-llama3 -f /Modelfile
+ollama create custom-llama3 -f /ModelfileLlama3
+
+# Pull the base model and create a new custom model
+ollama pull mistral
+ollama create custom-mistral -f /ModelFileMistral
 
 # Keep the container running
 tail -f /dev/null
