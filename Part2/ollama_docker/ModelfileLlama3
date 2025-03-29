@@ -1,7 +1,7 @@
 FROM llama3
 
 # Set temperature (higher = more creative, lower = more deterministic)
-PARAMETER temperature 0.8
+PARAMETER temperature 1
 
 
 # Define system behavior

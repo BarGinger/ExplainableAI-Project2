@@ -53,10 +53,10 @@ def handle_precondition_explanation(action, formal_explention):
     preconditions = formal_explention[2]
     if len(preconditions) > 1:
         preconditions_formatted = ', '.join(preconditions[:-1]) + ', and ' + preconditions[-1]
-        return f"The agent could not perform '{action}' because the obligatory preconditions: {preconditions_formatted} were not met."
+        return f"The agent successfully performed '{action}' because all the necessary preconditions: {preconditions_formatted}, were satisfied."
     else:
         preconditions_formatted = preconditions[0]
-        return f"The agent could not perform '{action}' because the obligatory precondition: {preconditions_formatted} was not met."
+        return f"The agent successfully performed '{action}' because the necessary precondition: {preconditions_formatted}, was satisfied."
 
 def handle_decision_explanation(action):
     return f"The agent chose to perform '{action}' as it is a necessary step to achieve the goal action."
@@ -219,9 +219,3 @@ def generate_naive_baseline(formal_explentions, chosen_trace, norm, goal, belief
         natural_explentions.append(generate_natural_explentions(explention, preferences))
 
     return natural_explentions
-
-# sample1 = [['C', 'getAnnOfficeCoffee', ['AnnInOffice']], ['N', 'getKitchenCoffee', 'P(gotoKitchen)'], ['V', 'getAnnOfficeCoffee', [2, 0, 6], '>', 'getShopCoffee', [0, 3, 9]], ['P', 'gotoAnnOffice', ['AnnInOffice']], ['L', 'getPod', '->', 'getCoffeeAnnOffice'], ['D', 'getAnnOfficeCoffee'], ['D', 'getCoffee'], ['U', [['quality', 'price', 'time'], [2, 0, 1]]]]
-# preferences = [["quality", "price", "time"], [1, 2, 0]]
-# sample1_res = generate_naive_baseline(formal_explentions=sample1, preferences=preferences)
-
-# print('\n '.join(sample1_res))

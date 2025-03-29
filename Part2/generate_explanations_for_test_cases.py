@@ -39,8 +39,6 @@ if __name__ == '__main__':
     current_dir = os.path.dirname(__file__)
     explanations_dir_baseline = os.path.join(current_dir, "explanations", "baseline")
     os.makedirs(explanations_dir_baseline, exist_ok=True)
-    explanations_dir_t5 = os.path.join(current_dir, "explanations", "T5")
-    os.makedirs(explanations_dir_t5, exist_ok=True)
 
 
 

@@ -6,6 +6,6 @@ The agent chose to perform 'getCoffee' as it is a necessary step to achieve the 
 The agent chose to perform 'getKitchenCoffee' as it is a necessary step to achieve the goal action.
 The agent was able to perform the action 'getOwnCard' as all its preconditions (ownCard) were successfully met.
 The agent cound not executed 'getOthersCard' because of the preconditions for it, which are colleagueAvailable, were not met.
-The agent could not perform 'getOwnCard' because the obligatory precondition: ownCard was not met.
-The agent could not perform 'getCoffeeKitchen' because the obligatory preconditions: haveCard, and atKitchen were not met.
+The agent successfully performed 'getOwnCard' because the necessary precondition: ownCard, was satisfied.
+The agent successfully performed 'getCoffeeKitchen' because all the necessary preconditions: haveCard, and atKitchen, were satisfied.
 The agent's preferences, in descending order of importance, are: quality, price, and time.
