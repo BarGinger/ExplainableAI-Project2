@@ -1,11 +1,13 @@
-Hey there! So, let's talk about why I chose to get coffee from the kitchen. You know how sometimes you just need a pick-me-up in the middle of the day? Well, for me, it all started with my initial beliefs. I began by assuming that I had access to my own card and that staff cards were available too.
+So, when I decided to perform the action 'getCoffeeKitchen', I started by thinking about what I believed was true. At that point, I had a staff card available and my own card as well. These beliefs were important because they influenced how I approached achieving my goal.
 
-Now, my goal was clear: I wanted to have coffee! And let's be real, who doesn't love a good cuppa in the kitchen? As I started thinking about how to get there, I considered a few options. I could've gotten a coffee from Anna's office or even from the shop down the street, but neither of those seemed like the best choice at the time.
+Speaking of which, my main objective was to have some coffee. I really wanted to get my hands on a cuppa! As for my preferences, I prioritized quality over price and time. This means that if I had to choose between a high-quality coffee shop with a slightly longer wait or one that's faster but maybe not as great in terms of taste, I'd go with the first option.
 
-You see, I was all about quality and price back then. I wanted my coffee to be top-notch, and I was willing to pay a bit more for it. The thought of getting coffee from Anna's office didn't seem right because, let's face it, she can be a bit particular sometimes. And as for the shop, well, their coffee just wasn't up to par in my opinion.
+As I thought about how to get my coffee, 'getKitchenCoffee' seemed like a viable choice because it didn't require any preconditions that weren't already met. It was basically a no-brainer! If only all actions were that straightforward...
 
-So, with those options ruled out, I decided to head to the kitchen instead. It was the best choice for me at that moment, and I'm glad I made that decision. After all, there's nothing like a freshly brewed cup of coffee in your own kitchen to brighten up your day!
+I did consider other options, though. For instance, I could've tried getting an office coffee from Ann's place or even stopped by the shop to grab some coffee there. But unfortunately, those options didn't pan out because Ann wasn't in her office and I didn't have any money on me.
 
-That's my story, friend! It's all about making choices based on our initial beliefs, goals, norms, restrictions, and preferences. And let me tell you, it's not always easy, but sometimes the best decisions are the ones that feel the most natural.
+After weighing my options, I decided that 'getCoffee' was a necessary step towards achieving my goal. It made sense to start with that since it would help me get closer to having coffee. And similarly, 'getKitchenCoffee' was another logical choice because it would allow me to get the coffee from the kitchen – which is where I wanted it in the first place!
 
-Now, go ahead and grab a cup of coffee (or tea, or whatever your heart desires)!
+I also took a moment to reflect on my own card situation and realized that I did have my own card available. This was a good thing, as it meant I could use it to achieve certain actions. In this case, having my own card meant I could perform 'getOwnCard', which was another important step towards getting the coffee.
+
+In hindsight, I'm glad I made these choices because they ultimately led me to successfully execute the action 'getCoffeeKitchen'!

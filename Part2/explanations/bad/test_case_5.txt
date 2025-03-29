@@ -1,0 +1,58 @@
+The following example is problematic for the following reasons:
+
+1) **Missing Initial Beliefs**: The explanation fails to mention the initial beliefs provided in the input: `["staffCardAvailable", "ownCard", "colleagueAvailable", "haveMoney"]`. These beliefs should be naturally integrated into the explanation.
+
+2) **No Mention of Preferences**: The explanation does not discuss the preferences provided in the input: `["quality", "price", "time"]` with priority `[1, 2, 0]`. It is critical to explain how these preferences influenced the decision-making process.
+
+3) **Fabricated Information**: The explanation introduces irrelevant and fabricated details, such as "not being able to get that fancy new coffee machine" and "best reviews and ratings," which are not part of the input data. The explanation must strictly adhere to the provided information.
+
+4) **No Clear Statement on the Action to Explain**: The explanation does not explicitly state whether the action `gotoKitchen` was executed or not, nor does it clarify the chosen trace. This is a critical omission.
+
+5) **Lack of Detailed Steps**: The explanation does not provide a step-by-step account of the agent's decision-making process, including the options considered, why certain options were chosen or rejected, and how the decisions align with the agent's beliefs, preferences, and goals.
+
+6) **Unjustified Statements**: Phrases like "it was a tough call" and "it seemed like the simplest and most straightforward option" are vague and lack justification. The explanation should provide clear reasoning based on the input data.
+
+7) **Overuse of Casual Language**: While a conversational tone is acceptable, phrases like "all that jazz" and "kick-start my day" are overly casual and detract from the clarity and professionalism of the explanation.
+
+Suggestions for Improvement:
+
+1) **Include Initial Beliefs**: Clearly list the initial beliefs in a natural flow. For example: "I started with the following beliefs: I had access to a staff card, my own card, a colleague was available, and I had enough money."
+
+2) **Discuss Preferences**: Explain the preferences and their priority. For example: "My preferences were to prioritize quality first, followed by price, and then time."
+
+3) **Avoid Fabricated Information**: Do not include details that are not part of the input, such as "fancy new coffee machine" or "best reviews and ratings." Stick to the provided data.
+
+4) **Explicitly Address the Action to Explain**: Clearly state whether the action `gotoKitchen` was executed or not and explain why. For example: "The action `gotoKitchen` was executed because it aligned with my preferences and was not restricted by any norms."
+
+5) **Provide Detailed Steps**: Walk through the decision-making process step by step. For example:
+   - "First, I considered using my own card, but it was not the most cost-effective option given my preferences."
+   - "Next, I thought about asking a colleague for their card, but they were unavailable."
+   - "Finally, I decided to go to the kitchen because it was convenient and aligned with my preferences."
+
+6) **Justify All Statements**: Replace vague statements with clear reasoning. For example: "I chose to go to the kitchen because it was the most cost-effective option and aligned with my preference for quality."
+
+7) **Use a Balanced Tone**: Maintain a conversational tone while ensuring clarity and professionalism. Avoid overly casual phrases and focus on providing a comprehensive explanation.
+
+8) There is no 'no new tech' norm! and you should specify norms at the beginning not the end of your response.
+
+
+generated text:
+Hey there! So, I took this path to get my coffee. It was a bit of a journey, but I'll walk you through it.
+
+First off, I started with some initial beliefs - you know, the usual stuff: staff cards were available, I had my own card, and all that jazz. And then, there was my ultimate goal: getting that delicious cup of coffee! Simple, right?
+
+Now, let's talk about norms and restrictions. Since I didn't have any pressing appointments or deadlines, I was free to explore my options. However, I did have some limitations - like not being able to get that fancy new coffee machine (it's on the list, though!).
+
+As for preferences, well, I'm a bit of a coffee snob. I prioritize quality over quantity, so I chose the path with the best reviews and ratings. My top priority was getting that perfect cup of joe!
+
+Now, let's dive into the nitty-gritty - the decision-making process! So, at one point, I had to choose between getting my staff card or my own card. It was a tough call, but I went with my own card since it was more convenient for me.
+
+Next up, I encountered an OR node - get kitchen coffee or ann office coffee? After considering the pros and cons (staff card availability, travel time, etc.), I chose get kitchen coffee because it was closer to my starting point. Plus, I had that sweet staff card!
+
+Speaking of which, let's talk about norms. Remember how I mentioned not being able to get that fancy new coffee machine? Yeah, that's because it violated the "no new tech" norm. Same thing happened with get shop coffee - it was prohibited due to some restriction I didn't quite understand (don't worry, I won't bore you with the details!).
+
+Now, about those failed conditions... Well, I did consider get ann office coffee initially, but its preconditions weren't met (staff card availability and travel time). That's why I chose get kitchen coffee instead.
+
+And that's it! The path to my perfect cup of coffee was a bit winding, but I made the most of it. In the end, I got exactly what I wanted - a delicious brew to kick-start my day!
+
+So, there you have it - my thought process in everyday language. Hope that helps clarify things for you!

@@ -1,0 +1,55 @@
+The following example is problematic for the following reasons:
+
+1) Rough Opening Sentence: The opening sentence lacks a smooth and natural flow. It feels abrupt and disconnected from the rest of the explanation. The introduction should set the stage for the explanation in a friendly and conversational way.
+
+2) Technical Terms for Beliefs: The list of beliefs (e.g., staffCardAvailable, ownCard, colleagueAvailable, haveMoney, and AnnInOffice) uses technical names instead of translating them into natural language. For example, staffCardAvailable could be described as "having access to a staff card." The explanation should avoid exposing technical terms and instead use plain, user-friendly language.
+
+3) Restrictions Explanation: The explanation of restrictions is poorly phrased. Mentioning technical terms like 'P' type or 'O' type parameters is unnecessary and confusing for the user. Instead, the explanation should describe the underlying meaning of these restrictions in plain language. Additionally, phrases like "prohibiting certain actions like 'payShop' definitely limited my options" are misleading because the word "like" implies there were other restrictions, even though only one restriction was provided. Be precise and avoid ambiguity.
+
+4) Invalid Description of Options: The phrase "or even asking a colleague for help" is not a valid description of an option. It should be more specific, such as "asking a colleague for their card." The explanation should clearly describe the actual options considered, without vague or inaccurate phrasing.
+
+5) Empty Statements: Phrases like "For example, I realized that getting a staff card wasn't feasible since it required certain conditions that weren't met" are too vague and uninformative. The explanation must specify which conditions were not met (e.g., "I couldn't get a staff card because I didn't have the required authorization").
+
+6) Lack of Flow and Depth: The explanation lacks a logical flow and fails to discuss the agent's decisions at each step in detail. Instead, it provides random and mostly empty statements. The explanation should walk the user through each decision point, explaining the options considered, why certain options were chosen or rejected, and how these decisions align with the agent's beliefs, preferences, and goals.
+
+
+Suggestions for Improvement:
+1) Smooth and Engaging Opening: Start with a friendly and conversational introduction that sets the context for the explanation. For example: "Let me walk you through how I decided on my coffee choice. It all started with the options I had and the restrictions I needed to consider."
+
+2) Natural Language for Beliefs: Replace technical terms with natural language descriptions. For example:
+
+staffCardAvailable → "I had access to a staff card."
+ownCard → "I had my own card."
+AnnInOffice → "Ann was in her office."
+
+3) Clear and Accurate Restrictions: Avoid technical jargon and ambiguous phrasing when explaining restrictions. For example:
+
+Instead of "prohibiting certain actions like 'payShop'," say: "I couldn't perform the action 'payShop' because it was explicitly prohibited."
+Specific and Valid Descriptions of Options: Clearly describe the options considered in a way that reflects the actual context. For example:
+
+Instead of "asking a colleague for help," say: "I considered asking a colleague for their card, but they weren't available."
+
+4) Specific and Valid Descriptions of Options: Clearly describe the options considered in a way that reflects the actual context. For example:
+
+Instead of "asking a colleague for help," say: "I considered asking a colleague for their card, but they weren't available."
+
+5) Detailed and Informative Statements: Avoid vague statements and provide specific details. For example:
+
+Instead of "getting a staff card wasn't feasible since it required certain conditions that weren't met," say: "I couldn't get a staff card because I didn't have the required authorization, which was one of the conditions."
+
+6) Logical Flow and Step-by-Step Discussion: Ensure the explanation follows a logical flow, discussing each decision point in detail. For example:
+
+"First, I considered getting coffee from the kitchen. While it was free and quick, the quality didn't meet my preferences. Next, I looked at the option of getting coffee from the shop. Although it was more expensive and took longer, it offered the best quality, which was my top priority. Based on this, I chose to get coffee from the shop."
+
+Generated text:
+So, let's talk about this action 'payShop' that I didn't actually perform. You know, it's funny because initially, I thought about all the options I had for getting my coffee fix. And, of course, I started with the basics: staffCardAvailable, ownCard, colleagueAvailable, haveMoney, and AnnInOffice - these were like the foundation of my whole thought process.
+
+As you can imagine, having a goal in mind helps guide your decisions, right? So, my main goal was to get some coffee! And, I had certain preferences that came into play. For instance, I prioritized quality, then price, and lastly time - it's all about finding that perfect balance, you know?
+
+Now, when it comes to norms and restrictions, there were a few things that influenced my decisions. Let me tell you, having the type 'P' norm prohibiting certain actions like 'payShop' definitely limited my options.
+
+So, I started exploring different paths - and this is where things got interesting! I considered getting my own card, staff card, or even asking a colleague for help. But, let's be real, some of those options just didn't make sense given the initial beliefs and preferences I had.
+
+For example, I realized that getting a staff card wasn't feasible since it required certain conditions that weren't met. And, similarly, asking a colleague for help was out of the question because they were busy or not available. It was all about finding the right combination of actions that would lead me to my goal - and, at the same time, respecting those norms and restrictions.
+
+In the end, I took the path that involved getting kitchen coffee, which ultimately led me to having my desired cuppa! Of course, 'payShop' wasn't part of that journey because it was prohibited, but I hope this explanation helps you understand why.
