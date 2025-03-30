@@ -1,19 +1,11 @@
 Here's my attempt at rewriting your naive explanation in a natural, first-person account:
 
-So, let me tell you about the decision I made regarding 'payShop'. First things first, there were some beliefs and goals that influenced my thinking. For instance, I believed that my staff card was available, I had my own card, my colleague was available too, and I had enough money to spare - oh, and Ann was in the office as well. My main goal, however, was to get my hands on some coffee. Simple, right?
+So, let me start by telling you about the context. I've got some beliefs and goals that guide my actions. For instance, I believe that staff cards are available, I have my own card, my colleague is available, I have money, and Ann is in office. My main goal right now is to get some coffee. Now, there's a restriction I need to keep in mind: I'm not allowed to go to Ann's office.
 
-Now, there were some restrictions at play that limited my options. One norm in particular stood out: I wasn't allowed to go to Ann's office under any circumstances. That might seem weird, but it was a rule I had to follow.
+To achieve my goal of having some coffee, I started by considering my options. I had a few different paths I could take - like getting shop coffee or kitchen coffee, for instance. But before I decided which route to take, I looked at the values associated with each option. For quality, I was leaning towards something that's really high-quality, and for price, I wanted something affordable. Time wasn't as big of a concern, but it was still important.
 
-So, given these beliefs and goals, as well as the restrictions, I started weighing my options. At first, I considered 'getShopCoffee' over 'getKitchenCoffee', all because of my priorities - quality, price, and time. You see, 'getShopCoffee' offered a quality score of 0.0, a price tag of 3.0, and a time cost of 9.0, while 'getKitchenCoffee' boasted a quality score of 5.0, a price of 0.0, and a time cost of just 3.0. Now, the decisive factor for me was quality - I wanted the best bang for my buck, so to speak. Since 'getShopCoffee' had a lower value than 'getKitchenCoffee', it seemed like the way to go.
+As I weighed my options, I realized that getKitchenCoffee had some great qualities - it was high-quality at 5.0 and very affordable at 0.0. On the other hand, getShopCoffee had lower values for quality and price, but it took less time to complete. In the end, I decided to go with getShopCoffee because its quality score was so low (0.0) compared to getKitchenCoffee's high score (5.0). Lower values are always better when it comes to quality, so that sealed the deal for me.
 
-But then, things got interesting. I realized that if I chose 'getAnnOfficeCoffee', I'd be forced to execute a prohibited action - going to Ann's office, remember? So, I had to veto that option altogether.
+Of course, there were some other options I considered along the way. For instance, I thought about getting coffee from Ann's office, but that wasn't an option since it would have taken me to a restricted area. And then there was the possibility of going to the kitchen, but I decided against that too - it just didn't seem like the most efficient route to get my coffee.
 
-Fast-forwarding to my thought process again, I decided to perform 'getShopCoffee' since all its preconditions were met. You see, it relied on me having enough money, which I did. That set the stage for the next step: getting the coffee itself.
-
-Of course, that meant I had to choose between 'getCoffee' and 'getShopCoffee'. As you can guess, I picked 'getCoffee', simply because it was a necessary step towards achieving my goal - getting coffee, remember?
-
-Now, here's where things got really important. With my goal in mind, I chose 'getShopCoffee' as the next logical step. It seemed like the most efficient way to get what I wanted.
-
-Finally, with all these steps leading up to it, I arrived at the moment of truth: 'payShop'. And guess what? Since I had enough money to spare, all its preconditions were met, so I was able to successfully perform that action too. It was a necessary step towards achieving my goal, after all.
-
-There you have it - my thought process regarding 'payShop'!
+In the end, I successfully got shop coffee and paid for it because I had the necessary money. It all worked out perfectly!

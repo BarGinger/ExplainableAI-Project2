@@ -1,17 +1,15 @@
-Here's the rewritten explanation in first-person:
+Here's my attempt at rewriting your naive explanation into a natural, first-person account:
 
-So, I was making decisions based on my beliefs, goals, and restrictions. One of the actions I considered taking was 'gotoKitchen', but before I got there, let me tell you what I believed at the time. I thought staffCardAvailable, ownCard, colleagueAvailable, and haveMoney were all true. My main goal was to haveCoffee - that's what drove my decision-making. Now, I know some actions are off-limits, and 'payShop' is one of them.
+As I'm deciding what to do next, I start with the basics: I believe that my staff card is available, and so are my own card and colleague's. Plus, I have the means to make it happen - I have money. Now, my ultimate goal is to have some coffee, and I know exactly how I want to get there.
 
-As I started thinking about how to achieve my goal, the first option that came up was to getKitchenCoffee. And you know what? It worked! The reason it did is because all the necessary preconditions - staffCardAvailable, in this case - were met. So, that's what I chose to do next.
+Now, when it comes to restrictions, I've got a simple rule: don't pay for something unless absolutely necessary. That's why I'm keenly aware of the prohibited actions that might pop up along the way.
 
-Now, I also considered gettingAnnOfficeCoffee, but unfortunately, those conditions weren't satisfied. That was a dead end. When I thought about my other options, I realized that gettingShopCoffee wasn't on the table because it would have led me to perform an action I'm not supposed to take - payShop.
+So, let me walk you through my thought process. First, I considered getting some coffee from the kitchen. It seemed like a great option at first, but then I realized it was dependent on having my staff card available - which I did! So, I went ahead and got the kitchen coffee.
 
-At this point, I knew I had to focus on the necessary steps to get my coffee. In my book, that means getting the coffee itself. So, that's what I chose to do next: getCoffee. It was a crucial step towards achieving my goal.
+Next up, I looked into other options that might get me to my coffee goal. But, I quickly ruled out getting office coffee from Ann because she's not even in the office right now (I'm assuming that much!). And getting shop coffee wasn't an option either, since it would require me to pay - and I'm trying to avoid that.
 
-Of course, I didn't stop there. The next thing I did was getKitchenCoffee again. Why? Because it was another necessary step to get my coffee, and all the preconditions were met once more.
+At this point, I was left with a choice between my own card and someone else's. Now, I know what you're thinking: why not just grab someone else's? Well, for one thing, I'm trying to prioritize my preferences here. And when it comes down to it, getting my own card is the better option because it's cheaper (or should I say, lower cost!). Plus, it doesn't take any more time or sacrifice quality - so that was an easy choice.
 
-Before I got into the kitchen, though, I had to think about how to get my own card. Now, you might wonder why I prioritized getting my own card over someone else's. Well, let me tell you - it's because of my preferences. In order of importance, those are price, time, and quality. And when I looked at the options, I saw that my own card had a perfect score on all three: quality was 0.0, price was 0.0, and time was also 0.0. Meanwhile, someone else's card had a time value of 2.0 - not desirable at all! So, my choice was clear.
+With my own card in hand, I'm now ready to head into the kitchen and get some coffee. And guess what? It's a necessary step towards achieving my goal of having coffee! So, off I go to the kitchen, armed with my staff card and ready to get brewing.
 
-I successfully got my own card, which meant I was ready to take the next step: gotoKitchen. Now, this action is linked to getting my coffee in the kitchen, so it made sense to do them together.
-
-That's the story of how I decided to 'gotoKitchen'.
+That's my thought process in a nutshell - or rather, a cup of coffee!
