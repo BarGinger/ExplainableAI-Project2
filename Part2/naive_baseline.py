@@ -210,7 +210,7 @@ def generate_naive_baseline(formal_explentions, chosen_trace, norm, goal, belief
             )
 
         if norm and norm.get("type") == "P" and action_to_explain in norm.get("actions", []):
-            natural_explentions.append("This action is restricted by the norm and therefore could not be executed.")
+            natural_explentions.append(f"The '{action_to_explain}' action is restricted by the norm and therefore could not be executed.")
 
         return natural_explentions
 

@@ -1,3 +1,3 @@
 To explain the action 'payShop', consider the following context: Restricted actions: payShop. Starting beliefs: staffCardAvailable, ownCard, colleagueAvailable, haveMoney, and AnnInOffice. Goal: haveCoffee. The agent's preferences, in descending order of importance, are: price, time, and quality.
 The action 'payShop' was not executed in the chosen trace (getCoffee, getKitchenCoffee, getStaffCard, getOwnCard, gotoKitchen, and getCoffeeKitchen).
-This action is restricted by the norm and therefore could not be executed.
+The 'payShop' action is restricted by the norm and therefore could not be executed.
