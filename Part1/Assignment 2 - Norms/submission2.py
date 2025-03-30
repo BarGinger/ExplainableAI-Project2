@@ -1,7 +1,4 @@
-# Insert here your code
-
-# Insert here your code
- # Import nessary packages
+# Import nessary packages
 from anytree.exporter import DotExporter
 from anytree.search import find
 from itertools import product
@@ -32,7 +29,15 @@ def find_starting_node(root, starting_node_name):
     return node
 
 def generate_traces(node):
-    """Recursively generates all possible traces from the given node."""
+    """
+    Recursively generates all possible traces from the given node.
+
+    Parameters:
+    node (Node): The current node in the tree.
+
+    Returns:
+    list: A list of all possible traces from the given node.
+    """
     if not hasattr(node, 'children') or not node.children:
         return [[node.name]]  # Leaf node (ACT), end of a trace
     
@@ -55,6 +60,15 @@ def generate_traces(node):
 
 
 def build_tree(json_node, parent=None):
+    """
+    Recursively builds a tree structure from the given JSON node.
+    Parameters:
+    json_node (dict): The JSON node to build the tree from
+    parent (Node): The parent node in the tree
+
+    Returns:
+    Node: The root node of the tree
+    """
     # Build the entire tree
     attributes = {k: v for k, v in json_node.items() if k not in ['name', 'type', 'children']}
     node = AnyNode(name=json_node['name'], type=json_node['type'], violation=False, parent=parent, **attributes)

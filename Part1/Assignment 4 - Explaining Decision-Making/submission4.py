@@ -299,17 +299,6 @@ def create_explanation(key="", node_name=None, value=[]):
     Returns:
     list: A list representing the explanation
     """
-    # Convert each element in the value list to a string, including arrays
-    # formatted_value = []
-    # if key not in ['U']:
-    #     for v in value:
-    #         if isinstance(v, list):
-    #             formatted_value.append(v)
-    #         else:
-    #             formatted_value.append(str(v))
-    # else:
-    #     formatted_value = value
-
     if node_name is None:
         return [key] + value
     
@@ -357,12 +346,20 @@ def get_cost_of_node(traces, costs, node):
     return costs[node_index]
 
 def add_linked_node_explanations(explanations, node, root):
-     if hasattr(node, 'link') and node.link:
-        for dest_node_name in node.link:
-            linked_node = find_node(root, dest_node_name)
-            if linked_node:
+     """
+     Add explanations for linked nodes.
+     Parameters:
+        explanations (list): The list of explanations
+        node (Node): The current node
+        root (Node): The root node of the tree     
+     """
+
+     if hasattr(node, 'link') and node.link: # check if node has a link attribute
+        for dest_node_name in node.link: # iterate over the linked nodes
+            linked_node = find_node(root, dest_node_name) # find the linked node
+            if linked_node: # check if the linked node exists
                 add_explanation(explanations, key='L', node_name=node.name, value=['->', dest_node_name])
-            if hasattr(linked_node, 'link') and node.link:
+            if hasattr(linked_node, 'link') and node.link: # check if the linked node has a link attribute
                 add_linked_node_explanations(explanations, linked_node, root)
 
 
