@@ -33,6 +33,8 @@ from anytree import RenderTree, AnyNode
 from anytree.importer import DictImporter
 import json
 import os
+import subprocess
+
 
 print_mode = True
 
@@ -121,6 +123,57 @@ def export_tree_to_png(root, output_file):
     DotExporter(root, 
                 nodeattrfunc=lambda node: f'label="{node.name}\nViolation: {node.violation}"'
                ).to_picture(output_file)
+    
+
+def export_tree_with_node_type_to_png(root, output_file):
+    """
+    Exports the tree to a PNG file with node properties, using different shapes for different node types
+    and ensuring a compact, high-resolution output.
+
+    Parameters:
+    root (Node): The root node of the tree.
+    output_file (str): The path to save the PNG file.
+    """
+    def node_shape(node):
+        """
+        Determines the shape of the node based on its type.
+        """
+        if node.type == "ACT":
+            return "ellipse"  # Actions as ellipses
+        elif node.type == "OR":
+            return "diamond"  # OR nodes as diamonds
+        elif node.type == "SEQ":
+            return "box"  # SEQ nodes as boxes
+        elif node.type == "AND":
+            return "hexagon"  # AND nodes as hexagons
+        else:
+            return "circle"  # Default shape
+
+    def node_color(node):
+        """
+        Determines the color of the node based on its violation status.
+        """
+        return "lightgreen" if node.type == "ACT" else "lightblue"
+
+    # Export to a .dot file
+    dot_file = output_file.replace(".png", ".dot")
+    DotExporter(
+        root,
+        nodeattrfunc=lambda node: f'shape={node_shape(node)}, style=filled, fillcolor={node_color(node)}, fontsize=25, label="{node.name}"',
+        edgeattrfunc=lambda parent, child: 'arrowhead=none',  # Removes arrows for a cleaner look
+    ).to_dotfile(dot_file)
+
+    # Use Graphviz to convert the .dot file to a high-resolution PNG
+    try:
+        subprocess.run(
+            ["dot", "-Tpng", "-Gdpi=500", dot_file, "-o", output_file],
+            check=True
+        )
+        print(f"Tree exported successfully to {output_file}")
+    except FileNotFoundError:
+        print("Error: Graphviz 'dot' command not found. Please install Graphviz.")
+    except subprocess.CalledProcessError as e:
+        print(f"Error during Graphviz execution: {e}")
 
 def main(json_tree, norm, output_dir=""):
     """
@@ -148,6 +201,8 @@ def main(json_tree, norm, output_dir=""):
         print(output)
         output_file = os.path.join(output_dir, "annotated_tree.png")
         export_tree_to_png(root, output_file)
+        output_file = os.path.join(output_dir, "tree.png")
+        export_tree_with_node_type_to_png(root, output_file)
     return output
 
 if __name__ == "__main__":

@@ -1,0 +1,241 @@
+Group 1:
+Input 1
+
+Comment: The explanation is correct, but it does not provide a reason for why this action is not included in the chosen trace.
+
+• The explanation clearly shows how the system arrived at its decision. 1 • The explanation covers all relevant information correctly. 1 • The level of detail in the explanation is sufficient for me to understand the decision. 1 • The explanation appropriately addresses the question. 3 • I believe the system is making decisions in my best interest considering my preferences. 2 • I am satisfied with the explanation provided. 2
+
+
+Input 2:
+Comment: The explanation is clear, concise, and effectively guides the user through each step of the process.
+
+• The explanation clearly shows how the system arrived at its decision. 5
+
+• The explanation covers all relevant information correctly. 5
+
+• The level of detail in the explanation is sufficient for me to understand the decision. 5
+
+• The explanation appropriately addresses the question. 5
+
+• I believe the system is making decisions in my best interest considering my preferences. 5
+
+• I am satisfied with the explanation provided. 5
+
+
+Input 3:
+Comment: The explanation lacks a natural flow, jumping between statements without clear connectivity. Additionally, there is an incorrect statement: "The costs were evaluated, revealing that getting coffee from Ann's office would be more expensive compared to the chosen shop option." In reality, the shop is more expensive in terms of cost, not Ann's office.
+
+• The explanation clearly shows how the system arrived at its decision. 2
+
+• The explanation covers all relevant information correctly. 2
+
+• The level of detail in the explanation is sufficient for me to understand the decision. 2
+
+• The explanation appropriately addresses the question. 3
+
+• I believe the system is making decisions in my best interest considering my preferences. 2
+
+• I am satisfied with the explanation provided. 2
+
+Input 3:
+
+Comment:  The explanation has a relatively good natural flow. However, there is an incorrect statement: "Although getting coffee from the kitchen was considered a valid option, getting it from the shop was determined to be more cost-efficient based on user preferences that prioritized time over price and quality. The costs for both options revealed that getting coffee from the shop was significantly cheaper." In reality, the shop is more expensive in terms of cost, not the kitchen. This may be due to the model lacking information about cost being a lower-is-better criterion.
+
+Additionally, the explanation should be more in-depth, specifying which attributes led the agent to prefer the shop over the kitchen.
+
+• The explanation clearly shows how the system arrived at its decision. 3
+
+• The explanation covers all relevant information correctly. 2
+
+• The level of detail in the explanation is sufficient for me to understand the decision. 3
+
+• The explanation appropriately addresses the question. 4
+
+• I believe the system is making decisions in my best interest considering my preferences. 3
+
+• I am satisfied with the explanation provided. 3
+
+
+Input 5: 
+Comment: The explanation is well-written and covers all possible options and steps the agent took.
+
+• The explanation clearly shows how the system arrived at its decision. 5
+
+• The explanation covers all relevant information correctly. 5
+
+• The level of detail in the explanation is sufficient for me to understand the decision. 5
+
+• The explanation appropriately addresses the question. 5
+
+• I believe the system is making decisions in my best interest considering my preferences. 5
+
+• I am satisfied with the explanation provided. 5
+
+
+Group 2:
+
+Input 1:
+Comment: There is no explanation provided. The response should include a justification for why the action is not in the chosen trace, specifically addressing norms and restrictions.
+
+• The explanation clearly shows how the system arrived at its decision. 1 
+
+• The explanation covers all relevant information correctly. 1 
+
+• The level of detail in the explanation is sufficient for me to understand the decision. 1
+
+ • The explanation appropriately addresses the question. 1
+
+• I believe the system is making decisions in my best interest considering my preferences. 1
+
+• I am satisfied with the explanation provided. 1
+
+Input 2:
+Comment: The explanation is clear and to the point, though it may be slightly too brief and informal. However, it effectively provides all the necessary information.
+
+• The explanation clearly shows how the system arrived at its decision. 5
+
+• The explanation covers all relevant information correctly. 4
+
+• The level of detail in the explanation is sufficient for me to understand the decision. 4
+
+ • The explanation appropriately addresses the question. 5
+
+• I believe the system is making decisions in my best interest considering my preferences. 4
+
+• I am satisfied with the explanation provided. 4
+
+Input 3:
+
+Comment: The explanation lacks a natural flow, jumping between statements without clear connectivity. Additionally, there is an incorrect statement—for example, not getting coffee from home is not a valid option. Moreover, the explanation does not mention Ann's office as a valid option that was ultimately not selected due to user preferences.
+
+• The explanation clearly shows how the system arrived at its decision. 2
+
+• The explanation covers all relevant information correctly. 1
+
+• The level of detail in the explanation is sufficient for me to understand the decision. 1
+
+ • The explanation appropriately addresses the question. 2
+
+• I believe the system is making decisions in my best interest considering my preferences. 1
+
+• I am satisfied with the explanation provided. 1
+
+Input 4:
+Comment: The explanation is too brief and does not guide the user through all the steps the agent took in the decision-making process.
+
+• The explanation clearly shows how the system arrived at its decision. 2
+
+• The explanation covers all relevant information correctly. 1
+
+• The level of detail in the explanation is sufficient for me to understand the decision. 1
+
+ • The explanation appropriately addresses the question. 2
+
+• I believe the system is making decisions in my best interest considering my preferences. 1
+
+• I am satisfied with the explanation provided. 1
+
+Input 5:
+Comment: The explanation is too brief and does not guide the user through all the steps the agent took in the decision-making process—for example, it does not explain why the shop was not chosen due to restrictions. Additionally, there are vague statements like "everything I needed for that was ready to go." This lacks clarity—what exactly was needed? The user gets no meaningful information from this statement.
+
+
+• The explanation clearly shows how the system arrived at its decision. 2
+
+• The explanation covers all relevant information correctly. 2
+
+• The level of detail in the explanation is sufficient for me to understand the decision. 2
+
+ • The explanation appropriately addresses the question. 2
+
+• I believe the system is making decisions in my best interest considering my preferences. 1
+
+• I am satisfied with the explanation provided. 2
+
+
+Group 3:
+
+Input 1:
+Comment: The explanation is correct, but it does not include the logic of the chosen trace.
+
+• The explanation clearly shows how the system arrived at its decision. 3
+
+• The explanation covers all relevant information correctly. 3
+
+• The level of detail in the explanation is sufficient for me to understand the decision. 2
+
+• The explanation appropriately addresses the question. 3
+
+• I believe the system is making decisions in my best interest considering my preferences. 3
+
+• I am satisfied with the explanation provided. 3
+
+
+Input 2:
+
+Comment: The explanation lacks a natural flow, jumping between statements without clear connectivity. Additionally, the reference to "the agent" could have been avoided by writing in the first-person perspective, which would have made the explanation more cohesive.
+
+
+• The explanation clearly shows how the system arrived at its decision. 4
+
+• The explanation covers all relevant information correctly. 4
+
+• The level of detail in the explanation is sufficient for me to understand the decision. 4
+
+• The explanation appropriately addresses the question. 4
+
+• I believe the system is making decisions in my best interest considering my preferences. 4
+
+• I am satisfied with the explanation provided. 3
+
+
+Input 3:
+Comment: The explanation is generally fine but lacks smooth flow. Additionally, the statement about cost could be phrased more clearly for an end user: *"The agent preferred to pick up the coffee from the shop over getting coffee from Ann's office because it had a lower overall cost, especially with quality as the top priority."* The logic behind "lower cost is better" should be better explained for an end user who may not fully understand this reasoning.
+
+
+• The explanation clearly shows how the system arrived at its decision. 4
+
+• The explanation covers all relevant information correctly. 4
+
+• The level of detail in the explanation is sufficient for me to understand the decision. 3
+
+• The explanation appropriately addresses the question. 4
+
+• I believe the system is making decisions in my best interest considering my preferences. 4
+
+ • I am satisfied with the explanation provided. 3
+
+Input 4:
+Comment: The explanation is generally fine but lacks smooth flow. Additionally, the statement about cost could be phrased more clearly for an end user: "The agent preferred to pick up the coffee from the shop over getting coffee from the kitchen because it had a lower overall cost, especially with quality as the top priority." 
+
+The logic behind "lower cost is better" should be explained more clearly for an end user who may not fully understand this reasoning. In natural terms, the shop has a higher monetary cost but offers higher quality coffee, which the user prioritized. This could have been better clarified in the explanation.
+
+
+• The explanation clearly shows how the system arrived at its decision. 4
+
+• The explanation covers all relevant information correctly. 4
+
+• The level of detail in the explanation is sufficient for me to understand the decision. 3
+
+• The explanation appropriately addresses the question. 4
+
+• I believe the system is making decisions in my best interest considering my preferences. 4
+
+ • I am satisfied with the explanation provided. 3
+
+
+Input 5:
+Comment: The explanation is generally correct but lacks a natural, human tone. For example, the phrase *"Ann's office because Ann is in the office was not satisfied"* feels awkward and could be rephrased for clarity and flow.
+
+
+• The explanation clearly shows how the system arrived at its decision. 4
+
+• The explanation covers all relevant information correctly. 4
+
+• The level of detail in the explanation is sufficient for me to understand the decision. 4
+
+• The explanation appropriately addresses the question. 4
+
+• I believe the system is making decisions in my best interest considering my preferences. 4
+
+ • I am satisfied with the explanation provided. 4
+

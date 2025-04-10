@@ -1,0 +1,31 @@
+digraph tree {
+    "getCoffee" [shape=diamond, style=filled, fillcolor=lightblue, fontsize=25, label="getCoffee"];
+    "getKitchenCoffee" [shape=box, style=filled, fillcolor=lightblue, fontsize=25, label="getKitchenCoffee"];
+    "getStaffCard" [shape=diamond, style=filled, fillcolor=lightblue, fontsize=25, label="getStaffCard"];
+    "getOwnCard" [shape=ellipse, style=filled, fillcolor=lightgreen, fontsize=25, label="getOwnCard"];
+    "getOthersCard" [shape=ellipse, style=filled, fillcolor=lightgreen, fontsize=25, label="getOthersCard"];
+    "gotoKitchen" [shape=ellipse, style=filled, fillcolor=lightgreen, fontsize=25, label="gotoKitchen"];
+    "getCoffeeKitchen" [shape=ellipse, style=filled, fillcolor=lightgreen, fontsize=25, label="getCoffeeKitchen"];
+    "getAnnOfficeCoffee" [shape=box, style=filled, fillcolor=lightblue, fontsize=25, label="getAnnOfficeCoffee"];
+    "gotoAnnOffice" [shape=ellipse, style=filled, fillcolor=lightgreen, fontsize=25, label="gotoAnnOffice"];
+    "getPod" [shape=ellipse, style=filled, fillcolor=lightgreen, fontsize=25, label="getPod"];
+    "getCoffeeAnnOffice" [shape=ellipse, style=filled, fillcolor=lightgreen, fontsize=25, label="getCoffeeAnnOffice"];
+    "getShopCoffee" [shape=box, style=filled, fillcolor=lightblue, fontsize=25, label="getShopCoffee"];
+    "gotoShop" [shape=ellipse, style=filled, fillcolor=lightgreen, fontsize=25, label="gotoShop"];
+    "payShop" [shape=ellipse, style=filled, fillcolor=lightgreen, fontsize=25, label="payShop"];
+    "getCoffeeShop" [shape=ellipse, style=filled, fillcolor=lightgreen, fontsize=25, label="getCoffeeShop"];
+    "getCoffee" -> "getKitchenCoffee" [arrowhead=none];
+    "getCoffee" -> "getAnnOfficeCoffee" [arrowhead=none];
+    "getCoffee" -> "getShopCoffee" [arrowhead=none];
+    "getKitchenCoffee" -> "getStaffCard" [arrowhead=none];
+    "getKitchenCoffee" -> "gotoKitchen" [arrowhead=none];
+    "getKitchenCoffee" -> "getCoffeeKitchen" [arrowhead=none];
+    "getStaffCard" -> "getOwnCard" [arrowhead=none];
+    "getStaffCard" -> "getOthersCard" [arrowhead=none];
+    "getAnnOfficeCoffee" -> "gotoAnnOffice" [arrowhead=none];
+    "getAnnOfficeCoffee" -> "getPod" [arrowhead=none];
+    "getAnnOfficeCoffee" -> "getCoffeeAnnOffice" [arrowhead=none];
+    "getShopCoffee" -> "gotoShop" [arrowhead=none];
+    "getShopCoffee" -> "payShop" [arrowhead=none];
+    "getShopCoffee" -> "getCoffeeShop" [arrowhead=none];
+}
